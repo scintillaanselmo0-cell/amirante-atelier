@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amirante Atelier — Sartoria d'alta moda a Villaricca | Sposa · Cerimonia · Uomo</title>
+<meta name="description" content="Atelier Amirante, sartoria d'alta moda a Villaricca (NA). Abiti da sposa, cerimonia e sposo su misura. Prenota la tua consulenza privata su appuntamento.">
+<meta name="theme-color" content="#12100E">
+<link rel="canonical" href="./">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="assets/favicon.png" type="image/png">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Amirante Atelier — Sartoria d'alta moda">
+<meta property="og:description" content="Abiti da sposa, cerimonia e sposo su misura. Prenota la tua consulenza privata.">
+<meta property="og:image" content="assets/gallery/sposa-11.jpg">
+<meta property="og:locale" content="it_IT">
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"ClothingStore",
+  "name":"Atelier Amirante — Meg Shop",
+  "image":"assets/gallery/sposa-11.jpg",
+  "address":{"@type":"PostalAddress","streetAddress":"Via della Libertà, 1174","addressLocality":"Villaricca","postalCode":"80010","addressRegion":"NA","addressCountry":"IT"},
+  "telephone":"+390818186855",
+  "url":"./",
+  "priceRange":"€€€"
+}
+</script>
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav" id="nav">
+    <a href="#top" class="nav-logo" aria-label="Amirante Atelier">
+      <img class="logo-light" src="assets/logo-light.png" alt="Amirante Atelier">
+      <img class="logo-dark" src="assets/logo-dark.png" alt="Amirante Atelier">
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#filosofia">Atelier</a>
+      <a href="#servizi">Consulenze</a>
+      <a href="#galleria">Collezione</a>
+      <a href="#contatti">Contatti</a>
+      <a href="#prenota" class="nav-cta">Prenota</a>
+    </nav>
+    <button class="nav-burger" id="navBurger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero-video">
+      <video id="heroVideo" autoplay muted loop playsinline preload="metadata" poster="assets/hero-vid-poster.jpg"></video>
+    </div>
+    <div class="hero-inner">
+      <img class="hero-logo" id="heroLogo" src="assets/logo-light.png" alt="Amirante Atelier">
+      <h1 id="heroClaim"></h1>
+      <p id="heroSub"></p>
+      <a href="#prenota" class="btn btn-ghost-light">Prenota la tua consulenza</a>
+    </div>
+    <div class="hero-scroll">Scopri</div>
+  </section>
+
+  <!-- FILOSOFIA -->
+  <section class="section philo" id="filosofia">
+    <div class="wrap philo-grid">
+      <div class="philo-text reveal">
+        <span class="kicker" id="philoKicker"></span>
+        <h2 id="philoTitle"></h2>
+        <div id="philoBody"></div>
+        <div class="philo-stats" id="philoStats"></div>
+      </div>
+      <div class="philo-media reveal d1">
+        <img id="philoImg" src="assets/gallery/sposa-05.jpg" alt="Dettaglio sartoriale Amirante">
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVIZI -->
+  <section class="section services" id="servizi">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="kicker">Le nostre consulenze</span>
+        <h2>Tre esperienze sartoriali</h2>
+        <p>Ogni incontro è un tempo dedicato, riservato, costruito attorno a te. Scegli il percorso che senti tuo.</p>
+      </div>
+      <div id="svcList"></div>
+    </div>
+  </section>
+
+  <!-- COME FUNZIONA -->
+  <section class="section steps" id="come-funziona">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="kicker">Prenotare è semplice</span>
+        <h2>Il tuo appuntamento in tre gesti</h2>
+      </div>
+      <div class="steps-grid" id="stepsGrid"></div>
+    </div>
+  </section>
+
+  <!-- GALLERIA -->
+  <section class="section gallery" id="galleria">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="kicker" id="galKicker"></span>
+        <h2 id="galTitle"></h2>
+      </div>
+      <div class="gal-grid" id="galGrid"></div>
+    </div>
+  </section>
+
+  <!-- ATMOSPHERE -->
+  <section class="atmo" id="atmo">
+    <video id="luxVideo" autoplay muted loop playsinline preload="metadata" poster="assets/lux-poster.jpg"></video>
+    <div class="atmo-inner reveal">
+      <h2>Il lusso è nel dettaglio che non si vede</h2>
+      <p>Vieni a scoprire l'atelier di persona. Ti aspettiamo a Villaricca.</p>
+    </div>
+  </section>
+
+  <!-- PRENOTA -->
+  <section class="section booking" id="prenota">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="kicker">Prenota</span>
+        <h2>Fissa la tua consulenza</h2>
+        <p>Scegli la consulenza, il giorno e l'orario. La disponibilità è in tempo reale.</p>
+      </div>
+      <div class="bk-shell reveal d1">
+        <div id="booking-app"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATTI -->
+  <section class="section contact" id="contatti">
+    <div class="wrap contact-grid">
+      <div class="contact-info reveal">
+        <span class="kicker">Dove siamo</span>
+        <h2>L'atelier</h2>
+        <div class="contact-block">
+          <div class="lbl">Indirizzo</div>
+          <p id="cAddr"></p>
+        </div>
+        <div class="contact-block">
+          <div class="lbl">Telefono</div>
+          <a id="cPhone" href="#"></a>
+        </div>
+        <div class="contact-block">
+          <div class="lbl">Prenotazioni WhatsApp</div>
+          <a id="cWa" href="#" target="_blank" rel="noopener"></a>
+        </div>
+        <div class="contact-block">
+          <div class="lbl">Orari</div>
+          <div id="cHours"></div>
+        </div>
+        <div class="contact-socials" id="cSocials"></div>
+      </div>
+      <div class="contact-map reveal d1">
+        <iframe id="cMap" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mappa atelier"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo"><img src="assets/logo-light.png" alt="Amirante Atelier"></div>
+          <p id="fAbout"></p>
+        </div>
+        <div class="footer-col">
+          <h5>Atelier</h5>
+          <a href="#filosofia">La filosofia</a>
+          <a href="#servizi">Le consulenze</a>
+          <a href="#galleria">La collezione</a>
+          <a href="#prenota">Prenota</a>
+        </div>
+        <div class="footer-col">
+          <h5>Contatti</h5>
+          <p id="fAddr"></p>
+          <a id="fPhone" href="#"></a>
+          <a id="fWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+          <a id="fIg" href="#" target="_blank" rel="noopener">Instagram</a>
+          <a id="fFb" href="#" target="_blank" rel="noopener">Facebook</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Atelier Amirante — Meg Shop. Tutti i diritti riservati.</span>
+        <span>Villaricca (NA) · Sartoria d'alta moda</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div class="lb" id="lightbox">
+    <button class="lb-close" id="lbClose" aria-label="Chiudi">✕</button>
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Precedente">‹</button>
+    <img id="lbImg" src="" alt="">
+    <button class="lb-nav lb-next" id="lbNext" aria-label="Successiva">›</button>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/booking.js"></script>
+</body>
+</html>
