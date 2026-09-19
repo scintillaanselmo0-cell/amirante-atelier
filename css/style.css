@@ -235,7 +235,7 @@ p{margin:0 0 1em}
 .bk-svc{display:flex;flex-direction:column;text-align:left;border:1px solid var(--line);
   background:#fff;cursor:pointer;padding:0;overflow:hidden;transition:.5s var(--ease);font-family:var(--sans)}
 .bk-svc:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:var(--shadow)}
-.bk-svc-img{display:block;width:100%;height:170px;object-fit:cover;object-position:center top;background:var(--ivory)}
+.bk-svc-img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center top;background:var(--ivory)}
 .bk-svc-body{padding:22px 22px 8px;flex:1}
 .bk-svc-kicker{display:block;font-size:.64rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem}
 .bk-svc-name{display:block;font-family:var(--serif);font-size:1.4rem;line-height:1.1;margin-bottom:.5rem}
