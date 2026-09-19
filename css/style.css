@@ -136,7 +136,7 @@ p{margin:0 0 1em}
 .svc:last-child{margin-bottom:0}
 .svc:nth-child(even) .svc-media{order:2}
 .svc-media{position:relative;overflow:hidden}
-.svc-media img{width:100%;aspect-ratio:3/4;object-fit:cover;transition:transform 1.6s var(--ease)}
+.svc-media img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center top;transition:transform 1.6s var(--ease)}
 .svc:hover .svc-media img{transform:scale(1.05)}
 .svc-num{position:absolute;top:20px;left:20px;font-family:var(--serif);font-size:3.4rem;font-style:italic;
   color:#fff;mix-blend-mode:overlay;opacity:.9}
@@ -235,7 +235,7 @@ p{margin:0 0 1em}
 .bk-svc{display:flex;flex-direction:column;text-align:left;border:1px solid var(--line);
   background:#fff;cursor:pointer;padding:0;overflow:hidden;transition:.5s var(--ease);font-family:var(--sans)}
 .bk-svc:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:var(--shadow)}
-.bk-svc-img{display:block;width:100%;height:170px;object-fit:cover;background:var(--ivory)}
+.bk-svc-img{display:block;width:100%;height:170px;object-fit:cover;object-position:center top;background:var(--ivory)}
 .bk-svc-body{padding:22px 22px 8px;flex:1}
 .bk-svc-kicker{display:block;font-size:.64rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem}
 .bk-svc-name{display:block;font-family:var(--serif);font-size:1.4rem;line-height:1.1;margin-bottom:.5rem}
