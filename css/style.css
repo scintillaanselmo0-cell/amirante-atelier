@@ -165,6 +165,12 @@ p{margin:0 0 1em}
    GALLERY
    ===================================================================== */
 .gallery{background:var(--paper)}
+.gal-filters{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:0 0 clamp(28px,5vw,48px)}
+.gal-filter{border:1px solid var(--line);background:transparent;cursor:pointer;font-family:var(--sans);
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);
+  padding:.85em 1.9em;transition:.4s var(--ease)}
+.gal-filter:hover{border-color:var(--gold);color:var(--gold)}
+.gal-filter.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .gal-grid{columns:3;column-gap:16px}
 .gal-grid img{width:100%;margin-bottom:16px;cursor:pointer;transition:filter .6s var(--ease),transform .6s var(--ease);
   filter:grayscale(.12) contrast(1.02)}

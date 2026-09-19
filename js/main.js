@@ -50,11 +50,33 @@
       <p>${s.d}</p>
     </div>`).join(""));
 
-  /* ---------- GALLERIA ---------- */
+  /* ---------- GALLERIA (filtrabile per categoria) ---------- */
   set("#galKicker", D.gallery.kicker);
   set("#galTitle", D.gallery.title);
-  set("#galGrid", D.gallery.images.map((src, i) =>
-    `<img src="${src}" alt="Creazione Amirante ${i + 1}" data-i="${i}" loading="lazy">`).join(""));
+  const galCats = D.gallery.categories;
+  let galCurrent = []; // immagini attualmente mostrate (per il lightbox)
+
+  // barra filtri (se più categorie)
+  if (galCats.length > 1) {
+    const bar = $("#galFilters");
+    if (bar) {
+      bar.innerHTML = galCats.map((cat, i) =>
+        `<button class="gal-filter${i === 0 ? " on" : ""}" data-cat="${cat.id}">${cat.label}</button>`).join("");
+      bar.addEventListener("click", (e) => {
+        const b = e.target.closest(".gal-filter"); if (!b) return;
+        bar.querySelectorAll(".gal-filter").forEach((x) => x.classList.remove("on"));
+        b.classList.add("on");
+        renderGallery(galCats.find((c) => c.id === b.dataset.cat));
+      });
+    }
+  }
+
+  function renderGallery(cat) {
+    galCurrent = cat.images.slice();
+    set("#galGrid", galCurrent.map((src, i) =>
+      `<img src="${src}" alt="Creazione Amirante ${cat.label} ${i + 1}" data-i="${i}" loading="lazy">`).join(""));
+  }
+  renderGallery(galCats[0]);
 
   /* ---------- ATMOSPHERE ---------- */
   const lv = $("#luxVideo");
@@ -106,8 +128,8 @@
 
   /* ---------- LIGHTBOX ---------- */
   const lb = $("#lightbox"), lbImg = $("#lbImg");
-  let gi = 0; const imgs = D.gallery.images;
-  const show = (i) => { gi = (i + imgs.length) % imgs.length; lbImg.src = imgs[gi]; };
+  let gi = 0;
+  const show = (i) => { const imgs = galCurrent; gi = (i + imgs.length) % imgs.length; lbImg.src = imgs[gi]; };
   const open = (i) => { show(i); lb.classList.add("on"); document.body.style.overflow = "hidden"; };
   const close = () => { lb.classList.remove("on"); document.body.style.overflow = ""; };
   $("#galGrid").addEventListener("click", (e) => {

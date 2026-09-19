@@ -122,11 +122,12 @@ Se in futuro vuoi richiedere un acconto per fissare la consulenza:
 
 ## 📸 Materiale fotografico — da integrare
 
-La galleria e le sezioni usano le **foto reali** dell'atelier (collezione sposa).
-Per elevare ulteriormente le sezioni **cerimonia** e **uomo** servono foto
-professionali dedicate a quei due mondi: al momento le card di quelle consulenze
-riusano foto della collezione sposa. Quando avrai gli scatti, sostituisci i
-percorsi in `data.js → services[].image` e aggiungi le immagini in `assets/gallery/`.
+La galleria è filtrabile per categoria (**Spose** / **Uomo**). Le foto sposa sono
+gli scatti reali dell'atelier; la sezione **Uomo** usa il materiale del fornitore
+(collezione Petrelli Uomo) in `assets/gallery-uomo/`. La card della consulenza
+**Sartoria uomo** usa una di queste foto. Per aggiungere/rimuovere immagini o
+categorie, modifica `data.js → gallery.categories`. Per la sezione **cerimonia**
+(invitati/mamme) servono ancora scatti dedicati.
 
 > Come da indicazioni: **nessuna foto stock** spacciata per materiale reale e
 > **nessuna recensione inventata**. La sezione testimonianze è volutamente

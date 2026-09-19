@@ -98,7 +98,7 @@ const DATA = {
         "Scelta di tessuti e configurazione dell'abito",
         "Presa misure e prova sartoriale",
       ],
-      image: "assets/gallery/sposa-10.jpg",
+      image: "assets/gallery-uomo/uomo-14.jpg",
     },
   ],
 
@@ -109,25 +109,56 @@ const DATA = {
     { n: "03", t: "Ti aspettiamo in atelier", d: "Ricevi conferma immediata. Il resto lo creiamo insieme, di persona." },
   ],
 
-  /* ---------- GALLERIA ---------- */
+  /* ---------- GALLERIA (a categorie) ---------- */
   gallery: {
-    kicker: "Le nostre spose",
+    kicker: "Le nostre creazioni",
     title: "Collezione",
-    // Foto reali dell'atelier. Per cerimonia/uomo, integrare con
-    // materiale fotografico professionale dedicato (vedi README).
-    images: [
-      "assets/gallery/sposa-01.jpg",
-      "assets/gallery/sposa-02.jpg",
-      "assets/gallery/sposa-03.jpg",
-      "assets/gallery/sposa-04.jpg",
-      "assets/gallery/sposa-05.jpg",
-      "assets/gallery/sposa-06.jpg",
-      "assets/gallery/sposa-07.jpg",
-      "assets/gallery/sposa-08.jpg",
-      "assets/gallery/sposa-09.jpg",
-      "assets/gallery/sposa-10.jpg",
-      "assets/gallery/sposa-12.jpg",
-      "assets/gallery/sposa-13.jpg",
+    // Galleria filtrabile per categoria. Aggiungere/rimuovere immagini qui.
+    categories: [
+      {
+        id: "spose",
+        label: "Spose",
+        images: [
+          "assets/gallery/sposa-01.jpg",
+          "assets/gallery/sposa-02.jpg",
+          "assets/gallery/sposa-03.jpg",
+          "assets/gallery/sposa-04.jpg",
+          "assets/gallery/sposa-05.jpg",
+          "assets/gallery/sposa-06.jpg",
+          "assets/gallery/sposa-07.jpg",
+          "assets/gallery/sposa-08.jpg",
+          "assets/gallery/sposa-09.jpg",
+          "assets/gallery/sposa-10.jpg",
+          "assets/gallery/sposa-12.jpg",
+          "assets/gallery/sposa-13.jpg",
+        ],
+      },
+      {
+        id: "uomo",
+        label: "Uomo",
+        images: [
+          "assets/gallery-uomo/uomo-02.jpg",
+          "assets/gallery-uomo/uomo-01.jpg",
+          "assets/gallery-uomo/uomo-03.jpg",
+          "assets/gallery-uomo/uomo-04.jpg",
+          "assets/gallery-uomo/uomo-06.jpg",
+          "assets/gallery-uomo/uomo-07.jpg",
+          "assets/gallery-uomo/uomo-08.jpg",
+          "assets/gallery-uomo/uomo-11.jpg",
+          "assets/gallery-uomo/uomo-12.jpg",
+          "assets/gallery-uomo/uomo-13.jpg",
+          "assets/gallery-uomo/uomo-14.jpg",
+          "assets/gallery-uomo/uomo-17.jpg",
+          "assets/gallery-uomo/uomo-19.jpg",
+          "assets/gallery-uomo/uomo-05.jpg",
+          "assets/gallery-uomo/uomo-09.jpg",
+          "assets/gallery-uomo/uomo-10.jpg",
+          "assets/gallery-uomo/uomo-15.jpg",
+          "assets/gallery-uomo/uomo-16.jpg",
+          "assets/gallery-uomo/uomo-18.jpg",
+          "assets/gallery-uomo/uomo-20.jpg",
+        ],
+      },
     ],
   },
 
