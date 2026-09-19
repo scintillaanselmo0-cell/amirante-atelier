@@ -75,7 +75,8 @@ Il sito sarà su: `https://scintillaanselmo0-cell.github.io/amirante-atelier/`
 - **Capienza 3** (3 sale prova): uno slot resta disponibile finché non sono
   occupate tutte e 3 le sale. Il blocco è **condiviso tra i tre tipi di consulenza**
   (le sale sono le stesse), quindi niente doppie prenotazioni sulla stessa risorsa.
-- Preavviso minimo 2 ore, orizzonte 60 giorni (configurabili in `data.js`).
+- Preavviso minimo 2 ore, orizzonte 18 mesi (calendario mensile completo, navigabile;
+  configurabile con `horizonMonths` in `data.js`).
 
 Tutto configurabile in `data.js → booking` (finestre, step, capienza, giorni
 aperti, date di chiusura, preavviso, orizzonte).

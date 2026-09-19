@@ -78,17 +78,22 @@
     return CFG.openDays.includes(wd);
   }
 
-  // Elenco dei prossimi giorni prenotabili (entro l'orizzonte).
-  function availableDates() {
-    const { y, m, d } = todayParts(CFG.timezone);
-    const out = [];
-    let cur = new Date(Date.UTC(y, m - 1, d));
-    for (let i = 0; i < CFG.horizonDays; i++) {
-      const yy = cur.getUTCFullYear(), mm = cur.getUTCMonth() + 1, dd = cur.getUTCDate();
-      if (isOpenDay(yy, mm, dd)) out.push({ iso: toISODate(yy, mm, dd), y: yy, m: mm, d: dd });
-      cur.setUTCDate(cur.getUTCDate() + 1);
-    }
-    return out;
+  // Limiti del calendario: da oggi (Rome) a oggi + horizonMonths.
+  function dateBounds() {
+    const t = todayParts(CFG.timezone);
+    const min = new Date(Date.UTC(t.y, t.m - 1, t.d));
+    const months = CFG.horizonMonths || 12;
+    const max = new Date(Date.UTC(t.y, t.m - 1 + months, t.d));
+    return { min, max, today: t };
+  }
+
+  // Un giorno è prenotabile se: giorno di apertura, non chiuso,
+  // non passato e non oltre l'orizzonte.
+  function isBookable(y, m, d) {
+    if (!isOpenDay(y, m, d)) return false;
+    const { min, max } = dateBounds();
+    const cur = Date.UTC(y, m - 1, d);
+    return cur >= min.getTime() && cur <= max.getTime();
   }
 
   /* ---------------- Accesso dati (Supabase) ---------------- */
@@ -204,12 +209,11 @@
   const monthNames = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
   const dayNames = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];
 
-  const state = { service: null, dates: [], iso: null, slot: null, slotsCache: {} };
+  const state = { service: null, iso: null, slot: null, slotsCache: {}, calY: null, calM: null };
 
   function mount() {
     const root = document.getElementById("booking-app");
     if (!root) return;
-    state.dates = availableDates();
     renderStep1(root);
   }
 
@@ -241,7 +245,7 @@
     if (window.__reveal) window.__reveal();
   }
 
-  /* ---- Step 2: data + orari ---- */
+  /* ---- Step 2: calendario + orari ---- */
   function renderStep2(root) {
     root.innerHTML = "";
     const wrap = el(`<div class="bk"></div>`);
@@ -254,25 +258,17 @@
     head.querySelector(".bk-back").addEventListener("click", () => renderStep1(root));
     wrap.appendChild(head);
 
-    const cols = el(`<div class="bk-cols"></div>`);
-
-    // colonna date
-    const dcol = el(`<div class="bk-dates"><h4>Scegli il giorno</h4><div class="bk-date-list"></div></div>`);
-    const dlist = dcol.querySelector(".bk-date-list");
-    if (state.dates.length === 0) {
-      dlist.appendChild(el(`<p class="bk-empty">Nessuna data disponibile al momento. Contattaci direttamente.</p>`));
+    // mese visualizzato di default
+    if (state.calY == null) {
+      const t = todayParts(CFG.timezone);
+      state.calY = t.y; state.calM = t.m;
     }
-    state.dates.forEach((dt) => {
-      const jsd = new Date(dt.iso + "T00:00:00");
-      const b = el(`<button class="bk-date" type="button" data-iso="${dt.iso}">
-          <span class="bk-date-dow">${dayNames[jsd.getDay()]}</span>
-          <span class="bk-date-num">${dt.d}</span>
-          <span class="bk-date-mon">${monthNames[dt.m - 1].slice(0,3)}</span>
-        </button>`);
-      b.addEventListener("click", () => { state.iso = dt.iso; state.slot = null; renderStep2(root); });
-      if (state.iso === dt.iso) b.classList.add("sel");
-      dlist.appendChild(b);
-    });
+
+    const cols = el(`<div class="bk-cols bk-cols-cal"></div>`);
+
+    // colonna calendario
+    const dcol = el(`<div class="bk-cal"><h4>Scegli il giorno</h4></div>`);
+    dcol.appendChild(buildCalendar(root));
     cols.appendChild(dcol);
 
     // colonna orari
@@ -317,6 +313,58 @@
 
     root.appendChild(wrap);
     if (window.__reveal) window.__reveal();
+  }
+
+  const weekLabels = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"];
+  const mIdx = (y, m) => y * 12 + (m - 1);
+
+  // Costruisce la griglia calendario del mese state.calY/calM.
+  function buildCalendar(root) {
+    const y = state.calY, m = state.calM;
+    const { min, max, today } = dateBounds();
+    const minM = mIdx(min.getUTCFullYear(), min.getUTCMonth() + 1);
+    const maxM = mIdx(max.getUTCFullYear(), max.getUTCMonth() + 1);
+    const curM = mIdx(y, m);
+
+    const wrap = el(`<div class="bk-cal-wrap"></div>`);
+
+    // header con navigazione
+    const hdr = el(`<div class="bk-cal-hdr">
+        <button class="bk-cal-nav" type="button" data-dir="-1" ${curM <= minM ? "disabled" : ""} aria-label="Mese precedente">‹</button>
+        <div class="bk-cal-title">${monthNames[m - 1]} ${y}</div>
+        <button class="bk-cal-nav" type="button" data-dir="1" ${curM >= maxM ? "disabled" : ""} aria-label="Mese successivo">›</button>
+      </div>`);
+    hdr.querySelectorAll(".bk-cal-nav").forEach((b) => b.addEventListener("click", () => {
+      if (b.disabled) return;
+      let nm = m + Number(b.dataset.dir), ny = y;
+      if (nm < 1) { nm = 12; ny--; } else if (nm > 12) { nm = 1; ny++; }
+      state.calY = ny; state.calM = nm;
+      renderStep2(root);
+    }));
+    wrap.appendChild(hdr);
+
+    // intestazione giorni settimana
+    const wk = el(`<div class="bk-cal-week"></div>`);
+    weekLabels.forEach((d) => wk.appendChild(el(`<span>${d}</span>`)));
+    wrap.appendChild(wk);
+
+    // griglia giorni
+    const grid = el(`<div class="bk-cal-grid"></div>`);
+    const firstDow = new Date(Date.UTC(y, m - 1, 1)).getUTCDay(); // 0=Dom
+    const lead = (firstDow + 6) % 7; // lunedì come primo giorno
+    const days = new Date(Date.UTC(y, m, 0)).getUTCDate();
+    for (let i = 0; i < lead; i++) grid.appendChild(el(`<span class="bk-cal-empty"></span>`));
+    for (let d = 1; d <= days; d++) {
+      const iso = toISODate(y, m, d);
+      const bookable = isBookable(y, m, d);
+      const isToday = (y === today.y && m === today.m && d === today.d);
+      const cls = "bk-cal-day" + (bookable ? "" : " off") + (state.iso === iso ? " sel" : "") + (isToday ? " today" : "");
+      const cell = el(`<button class="${cls}" type="button" ${bookable ? "" : "disabled"}>${d}</button>`);
+      if (bookable) cell.addEventListener("click", () => { state.iso = iso; state.slot = null; renderStep2(root); });
+      grid.appendChild(cell);
+    }
+    wrap.appendChild(grid);
+    return wrap;
   }
 
   async function loadSlots(service, iso) {
@@ -417,7 +465,7 @@
   }
 
   /* ---------------- Export ---------------- */
-  window.Booking = { mount, slotsForService, freeSlots, availableDates, _internals: { zonedWallToInstant, tzOffsetMinutes, hmToMin, minToHM } };
+  window.Booking = { mount, slotsForService, freeSlots, isBookable, dateBounds, _internals: { zonedWallToInstant, tzOffsetMinutes, hmToMin, minToHM } };
 
   if (document.readyState !== "loading") mount();
   else document.addEventListener("DOMContentLoaded", mount);

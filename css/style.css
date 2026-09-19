@@ -261,6 +261,27 @@ p{margin:0 0 1em}
 .bk-loading{color:var(--gold)}
 .bk-next{margin-top:2rem;width:100%;justify-content:center}
 
+/* calendario mensile */
+.bk-cols-cal{grid-template-columns:320px 1fr}
+.bk-cal-wrap{border:1px solid var(--line);background:#fff;padding:16px}
+.bk-cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.bk-cal-title{font-family:var(--serif);font-size:1.25rem;text-transform:capitalize}
+.bk-cal-nav{width:36px;height:36px;border:1px solid var(--line);background:#fff;cursor:pointer;
+  font-size:1.2rem;line-height:1;color:var(--ink);transition:.3s var(--ease);border-radius:0}
+.bk-cal-nav:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}
+.bk-cal-nav:disabled{opacity:.25;cursor:not-allowed}
+.bk-cal-week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.bk-cal-week span{text-align:center;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.bk-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.bk-cal-empty{aspect-ratio:1}
+.bk-cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border:1px solid transparent;
+  background:transparent;cursor:pointer;font-family:var(--sans);font-size:.92rem;color:var(--ink);
+  transition:.2s var(--ease);border-radius:50%}
+.bk-cal-day:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}
+.bk-cal-day.today{font-weight:500;box-shadow:inset 0 0 0 1px var(--line)}
+.bk-cal-day.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+.bk-cal-day.off{color:#cfc8bb;cursor:not-allowed;pointer-events:none}
+
 /* form */
 .bk-form{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .bk-field{display:flex;flex-direction:column;gap:.5rem}

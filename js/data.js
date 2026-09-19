@@ -154,7 +154,7 @@ const DATA = {
     stepMin: 30,        // unità base di generazione slot
     capacity: 3,        // 3 sale prova → 3 appuntamenti in parallelo
     leadTimeHours: 2,   // preavviso minimo per prenotare
-    horizonDays: 60,    // quanti giorni in avanti si può prenotare
+    horizonMonths: 18,  // quanti mesi in avanti si può prenotare (calendario completo)
 
     // Giorni della settimana aperti (0 = Domenica ... 6 = Sabato)
     openDays: [1, 2, 3, 4, 5, 6],
