@@ -73,8 +73,11 @@
 
   function renderGallery(cat) {
     galCurrent = cat.images.slice();
-    set("#galGrid", galCurrent.map((src, i) =>
-      `<img src="${src}" alt="Creazione Amirante ${cat.label} ${i + 1}" data-i="${i}" loading="lazy">`).join(""));
+    set("#galGrid", galCurrent.map((src, i) => `
+      <button class="gal-item" type="button" data-i="${i}" aria-label="Apri immagine ${i + 1}">
+        <img src="${src}" alt="Creazione Amirante ${cat.label} ${i + 1}" loading="lazy">
+        <span class="gal-item-ov"><span class="gal-item-plus">+</span></span>
+      </button>`).join(""));
   }
   renderGallery(galCats[0]);
 
@@ -127,13 +130,16 @@
   window.__reveal = observeReveals;
 
   /* ---------- LIGHTBOX ---------- */
-  const lb = $("#lightbox"), lbImg = $("#lbImg");
+  const lb = $("#lightbox"), lbImg = $("#lbImg"), lbCount = $("#lbCount");
   let gi = 0;
-  const show = (i) => { const imgs = galCurrent; gi = (i + imgs.length) % imgs.length; lbImg.src = imgs[gi]; };
+  const show = (i) => {
+    const imgs = galCurrent; gi = (i + imgs.length) % imgs.length; lbImg.src = imgs[gi];
+    if (lbCount) lbCount.textContent = `${gi + 1} / ${imgs.length}`;
+  };
   const open = (i) => { show(i); lb.classList.add("on"); document.body.style.overflow = "hidden"; };
   const close = () => { lb.classList.remove("on"); document.body.style.overflow = ""; };
   $("#galGrid").addEventListener("click", (e) => {
-    const t = e.target.closest("img[data-i]"); if (t) open(+t.dataset.i);
+    const t = e.target.closest(".gal-item[data-i]"); if (t) open(+t.dataset.i);
   });
   $("#lbClose").addEventListener("click", close);
   $("#lbPrev").addEventListener("click", () => show(gi - 1));
