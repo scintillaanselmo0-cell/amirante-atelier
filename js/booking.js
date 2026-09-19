@@ -224,7 +224,8 @@
     SERVICES.forEach((s) => {
       const card = el(`
         <button class="bk-svc reveal" type="button" data-id="${s.id}">
-          <span class="bk-svc-img" style="background-image:url('${s.image}')"></span>
+          <img class="bk-svc-img" src="${s.image}" alt="${s.name}" loading="lazy">
+
           <span class="bk-svc-body">
             <span class="bk-svc-kicker">${s.kicker}</span>
             <span class="bk-svc-name">${s.name}</span>
@@ -347,7 +348,7 @@
       <form class="bk-form" novalidate>
         <div class="bk-field"><label>Nome e cognome *</label><input name="nome" type="text" required autocomplete="name"></div>
         <div class="bk-field"><label>Telefono *</label><input name="telefono" type="tel" required autocomplete="tel" inputmode="tel"></div>
-        <div class="bk-field"><label>Email</label><input name="email" type="email" autocomplete="email"></div>
+        <div class="bk-field"><label>Email (facoltativo)</label><input name="email" type="email" autocomplete="email"></div>
         <div class="bk-field bk-field-full"><label>${isSposa ? "Data dell'evento e note" : "Note (facoltativo)"}</label><textarea name="note" rows="3" placeholder="${isSposa ? "Es. matrimonio il 12 giugno 2027, cerco un abito…" : "Raccontaci l'occasione…"}"></textarea></div>
         <p class="bk-error" hidden></p>
         <button class="btn btn-gold bk-submit" type="submit">Conferma la prenotazione</button>
