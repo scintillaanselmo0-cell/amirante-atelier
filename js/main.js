@@ -22,8 +22,12 @@
   set("#philoKicker", D.philosophy.kicker);
   set("#philoTitle", D.philosophy.title);
   set("#philoBody", D.philosophy.body.map((p) => `<p>${p}</p>`).join(""));
-  set("#philoStats", D.philosophy.stats.map((s) =>
-    `<div><div class="n">${s.n}</div><div class="l">${s.l}</div></div>`).join(""));
+  if (D.philosophy.stats && D.philosophy.stats.length) {
+    set("#philoStats", D.philosophy.stats.map((s) =>
+      `<div><div class="n">${s.n}</div><div class="l">${s.l}</div></div>`).join(""));
+  } else {
+    const ps = $("#philoStats"); if (ps) ps.remove();
+  }
 
   /* ---------- SERVIZI ---------- */
   set("#svcList", D.services.map((s, i) => `
@@ -35,7 +39,7 @@
       <div class="svc-body">
         <span class="kicker">${s.kicker}</span>
         <h3>${s.name}</h3>
-        <div class="svc-dur">${s.durationMin} minuti</div>
+        <div class="svc-dur">Su appuntamento</div>
         <p>${s.desc}</p>
         <ul class="svc-list">${s.expect.map((e) => `<li>${e}</li>`).join("")}</ul>
         <a href="#prenota" class="btn">Prenota questa consulenza</a>

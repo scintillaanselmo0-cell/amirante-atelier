@@ -190,15 +190,15 @@
     const dateLabel = new Date(payload.iso + "T00:00:00").toLocaleDateString("it-IT", {
       weekday: "long", day: "numeric", month: "long", year: "numeric",
     });
+    const ora = minToHM(payload.startMin);
     const msg =
-      `Nuova richiesta di prenotazione — Amirante Atelier%0A%0A` +
-      `Servizio: ${payload.service.name}%0A` +
-      `Data: ${dateLabel}%0A` +
-      `Orario: ${minToHM(payload.startMin)} – ${minToHM(payload.endMin)}%0A` +
-      `Nome: ${payload.nome}%0A` +
-      `Telefono: ${payload.telefono}%0A` +
-      (payload.email ? `Email: ${payload.email}%0A` : "") +
-      (payload.note ? `Note: ${payload.note}%0A` : "");
+      `Buongiorno, sono ${payload.nome} e vorrei prenotare una consulenza presso l'Atelier Amirante.%0A%0A` +
+      `Sarei felice di venirvi a trovare per: ${payload.service.name}.%0A` +
+      `Il giorno che preferisco è ${dateLabel}, verso le ${ora}.%0A%0A` +
+      `Potete contattarmi al ${payload.telefono}` +
+      (payload.email ? ` oppure via email a ${payload.email}` : "") + `.%0A` +
+      (payload.note ? `%0AUn'ultima nota: ${payload.note}%0A` : "") +
+      `%0AAttendo una vostra conferma. Grazie!`;
     return `https://wa.me/${CONTACT.whatsappNumber}?text=${msg}`;
   }
 
@@ -233,7 +233,7 @@
           <span class="bk-svc-body">
             <span class="bk-svc-kicker">${s.kicker}</span>
             <span class="bk-svc-name">${s.name}</span>
-            <span class="bk-svc-dur">${s.durationMin} minuti · su appuntamento</span>
+            <span class="bk-svc-dur">Su appuntamento</span>
           </span>
           <span class="bk-svc-go">Scegli <i>→</i></span>
         </button>`);
@@ -253,7 +253,7 @@
 
     const head = el(`<div class="bk-head">
         <button class="bk-back" type="button">← Consulenza</button>
-        <div class="bk-chosen">${state.service.name} <em>· ${state.service.durationMin} min</em></div>
+        <div class="bk-chosen">${state.service.name}</div>
       </div>`);
     head.querySelector(".bk-back").addEventListener("click", () => renderStep1(root));
     wrap.appendChild(head);

@@ -12,7 +12,7 @@ const DATA = {
     tagline: "atelier",
     fullName: "Atelier Amirante — Meg Shop",
     claim: "L'abito dei momenti che non si dimenticano",
-    subclaim: "Sartoria d'alta moda per la sposa, la cerimonia e lo sposo. A Villaricca dal cuore della tradizione napoletana.",
+    subclaim: "Sartoria d'alta moda per la sposa, la cerimonia e lo sposo. Dal cuore della tradizione.",
     logoDark: "assets/logo-dark.png",   // logo nero (su fondo chiaro)
     logoLight: "assets/logo-light.png", // logo bianco (su fondo scuro)
   },
@@ -37,7 +37,7 @@ const DATA = {
   hours: {
     note: "Riceviamo esclusivamente su appuntamento",
     lines: [
-      { d: "Lunedì — Sabato", h: "09:00 – 12:30  ·  16:00 – 19:30" },
+      { d: "Lunedì — Sabato", h: "09:00 – 13:30  ·  16:00 – 20:30" },
       { d: "Domenica", h: "Su richiesta" },
     ],
   },
@@ -50,11 +50,7 @@ const DATA = {
       "Amirante nasce dalla convinzione che un abito non si indossi soltanto: si vive. Nel nostro atelier ogni creazione prende forma lentamente, cucitura dopo cucitura, seguendo la persona che la indosserà.",
       "Tessuti scelti a mano, ricami eseguiti con pazienza artigianale, proporzioni studiate sul corpo di chi sogna: è così che trasformiamo un desiderio in un capo unico, destinato a durare ben oltre il giorno per cui è stato pensato.",
     ],
-    stats: [
-      { n: "3", l: "Sale prova private" },
-      { n: "100%", l: "Su misura" },
-      { n: "Villaricca", l: "Il nostro atelier" },
-    ],
+    stats: [],
   },
 
   /* ---------- SERVIZI / CONSULENZE ---------- */
@@ -178,8 +174,8 @@ const DATA = {
     // Finestre orarie di apertura (valgono per tutti i servizi).
     // L'ultimo slot generato termina SEMPRE entro la fine della fascia.
     windows: [
-      { start: "09:00", end: "12:30" },
-      { start: "16:00", end: "19:30" },
+      { start: "09:00", end: "13:30" },
+      { start: "16:00", end: "20:30" },
     ],
 
     stepMin: 30,        // unità base di generazione slot
