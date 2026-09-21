@@ -228,7 +228,7 @@
     SERVICES.forEach((s) => {
       const card = el(`
         <button class="bk-svc reveal" type="button" data-id="${s.id}">
-          <img class="bk-svc-img" src="${s.image}" alt="${s.name}" loading="lazy">
+          <img class="bk-svc-img" src="${s.image}" alt="${s.name} — Atelier Amirante" width="800" height="1000" loading="lazy">
 
           <span class="bk-svc-body">
             <span class="bk-svc-kicker">${s.kicker}</span>

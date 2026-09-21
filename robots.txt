@@ -1,0 +1,6 @@
+# robots.txt — Atelier Amirante
+User-agent: *
+Allow: /
+Disallow: /supabase/
+
+Sitemap: https://scintillaanselmo0-cell.github.io/amirante-atelier/sitemap.xml

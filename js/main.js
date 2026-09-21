@@ -33,8 +33,8 @@
   set("#svcList", D.services.map((s, i) => `
     <article class="svc reveal">
       <div class="svc-media">
-        <span class="svc-num">0${i + 1}</span>
-        <img src="${s.image}" alt="${s.name}">
+        <span class="svc-num" aria-hidden="true">0${i + 1}</span>
+        <img src="${s.image}" alt="${s.name} — Atelier Amirante, Villaricca" width="900" height="1200" loading="lazy">
       </div>
       <div class="svc-body">
         <span class="kicker">${s.kicker}</span>
@@ -65,11 +65,11 @@
     const bar = $("#galFilters");
     if (bar) {
       bar.innerHTML = galCats.map((cat, i) =>
-        `<button class="gal-filter${i === 0 ? " on" : ""}" data-cat="${cat.id}">${cat.label}</button>`).join("");
+        `<button class="gal-filter${i === 0 ? " on" : ""}" type="button" data-cat="${cat.id}" aria-pressed="${i === 0}">${cat.label}</button>`).join("");
       bar.addEventListener("click", (e) => {
         const b = e.target.closest(".gal-filter"); if (!b) return;
-        bar.querySelectorAll(".gal-filter").forEach((x) => x.classList.remove("on"));
-        b.classList.add("on");
+        bar.querySelectorAll(".gal-filter").forEach((x) => { x.classList.remove("on"); x.setAttribute("aria-pressed", "false"); });
+        b.classList.add("on"); b.setAttribute("aria-pressed", "true");
         renderGallery(galCats.find((c) => c.id === b.dataset.cat));
       });
     }
@@ -77,10 +77,11 @@
 
   function renderGallery(cat) {
     galCurrent = cat.images.slice();
+    const altBase = cat.id === "uomo" ? "Abito uomo da cerimonia" : "Abito da sposa";
     set("#galGrid", galCurrent.map((src, i) => `
-      <button class="gal-item" type="button" data-i="${i}" aria-label="Apri immagine ${i + 1}">
-        <img src="${src}" alt="Creazione Amirante ${cat.label} ${i + 1}" loading="lazy">
-        <span class="gal-item-ov"><span class="gal-item-plus">+</span></span>
+      <button class="gal-item" type="button" data-i="${i}" aria-label="Ingrandisci: ${altBase} ${i + 1}">
+        <img src="${src}" alt="${altBase} su misura — Atelier Amirante, Villaricca (${i + 1})" width="900" height="1200" loading="lazy">
+        <span class="gal-item-ov" aria-hidden="true"><span class="gal-item-plus">+</span></span>
       </button>`).join(""));
   }
   renderGallery(galCats[0]);
@@ -117,12 +118,13 @@
   onScroll(); window.addEventListener("scroll", onScroll, { passive: true });
 
   const burger = $("#navBurger"), links = $("#navLinks");
-  burger.addEventListener("click", () => {
-    links.classList.toggle("open"); nav.classList.toggle("menu-open");
-  });
-  $$("#navLinks a").forEach((a) => a.addEventListener("click", () => {
-    links.classList.remove("open"); nav.classList.remove("menu-open");
-  }));
+  const setMenu = (open) => {
+    links.classList.toggle("open", open); nav.classList.toggle("menu-open", open);
+    burger.setAttribute("aria-expanded", String(open));
+    burger.setAttribute("aria-label", open ? "Chiudi il menu" : "Apri il menu");
+  };
+  burger.addEventListener("click", () => setMenu(!links.classList.contains("open")));
+  $$("#navLinks a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
 
   /* ---------- REVEAL ON SCROLL ---------- */
   const io = new IntersectionObserver((entries) => {
@@ -138,10 +140,19 @@
   let gi = 0;
   const show = (i) => {
     const imgs = galCurrent; gi = (i + imgs.length) % imgs.length; lbImg.src = imgs[gi];
+    lbImg.alt = `Creazione Atelier Amirante ${gi + 1} di ${imgs.length}`;
     if (lbCount) lbCount.textContent = `${gi + 1} / ${imgs.length}`;
   };
-  const open = (i) => { show(i); lb.classList.add("on"); document.body.style.overflow = "hidden"; };
-  const close = () => { lb.classList.remove("on"); document.body.style.overflow = ""; };
+  let lbTrigger = null;
+  const open = (i) => {
+    lbTrigger = document.activeElement;
+    show(i); lb.classList.add("on"); lb.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden"; $("#lbClose").focus();
+  };
+  const close = () => {
+    lb.classList.remove("on"); lb.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = ""; if (lbTrigger && lbTrigger.focus) lbTrigger.focus();
+  };
   $("#galGrid").addEventListener("click", (e) => {
     const t = e.target.closest(".gal-item[data-i]"); if (t) open(+t.dataset.i);
   });

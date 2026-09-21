@@ -10,24 +10,53 @@ integrazione Supabase opzionale. Pronto per GitHub Pages.
 
 ```
 amirante-atelier/
-├── index.html            # struttura + SEO
+├── index.html            # SEO, JSON-LD, OG/Twitter, critical CSS inline, HTML semantico
 ├── .nojekyll             # (IMPORTANTE) evita che GitHub Pages droppi le cartelle asset
-├── favicon.ico
-├── css/style.css
+├── robots.txt            # crawl + riferimento alla sitemap
+├── sitemap.xml           # sitemap XML
+├── favicon.ico / favicon.png
+├── css/
+│   ├── style.css         # sorgente (da editare)
+│   └── style.min.css     # ← usato in produzione (rigenerare dopo le modifiche)
 ├── js/
-│   ├── data.js           # ← FONTE UNICA DI VERITÀ (testi, contatti, servizi, config)
-│   ├── booking.js        # motore slot + Supabase + WhatsApp + UI prenotazione
-│   └── main.js           # rendering contenuti, nav, animazioni, galleria/lightbox
+│   ├── data.js           # ← FONTE UNICA DI VERITÀ (testi, contatti, servizi, config) — usato così com'è
+│   ├── booking.js        # sorgente motore slot + Supabase + WhatsApp + UI
+│   ├── booking.min.js    # ← usato in produzione (rigenerare dopo le modifiche)
+│   ├── main.js           # sorgente rendering, nav, galleria/lightbox, a11y
+│   └── main.min.js       # ← usato in produzione (rigenerare dopo le modifiche)
 ├── assets/
-│   ├── logo-dark.png / logo-light.png
-│   ├── video-hero.mp4 / video-lux.mp4 (+ poster)
-│   ├── marble-light.jpg / marble-dark.jpg
-│   └── gallery/sposa-01…13.jpg
+│   ├── logo-*.webp / logo-*.png
+│   ├── og-image.jpg      # immagine social 1200×630
+│   ├── video-hero.mp4 / video-lux.mp4 (+ poster .jpg)
+│   ├── marble-light.webp / marble-dark.webp
+│   ├── gallery/sposa-*.webp
+│   └── gallery-uomo/uomo-*.webp
 └── supabase/schema.sql   # tabella + RLS + funzione atomica book_slot
 ```
 
 Per modificare **qualsiasi contenuto** (testi, orari, contatti, servizi) basta
-editare `js/data.js`. Nessun testo è hard-coded nell'HTML.
+editare `js/data.js` (usato direttamente, non minificato).
+
+### Rigenerare i file minificati (dopo aver modificato style.css / main.js / booking.js)
+```bash
+npx clean-css-cli -O2 -o css/style.min.css css/style.css
+npx terser js/main.js -c -m -o js/main.min.js
+npx terser js/booking.js -c -m -o js/booking.min.js
+```
+
+## 🔎 SEO / Performance / Accessibilità (già implementati)
+- Un solo `<h1>` con keyword + geo, gerarchia H2/H3 corretta, HTML semantico (`header/nav/main/section/article/footer/address`).
+- `<title>` (50 car., keyword in apertura), meta description (154 car.), canonical assoluto, `lang="it"`.
+- **Dati strutturati JSON-LD** (`@graph`): `ClothingStore` con NAP, `geo`, `openingHoursSpecification`, `sameAs`, `hasOfferCatalog`; `WebSite`; `BreadcrumbList`.
+- **Open Graph** completo + **Twitter Card** `summary_large_image` (immagine `assets/og-image.jpg`).
+- Immagini **WebP** con `width`/`height` espliciti (niente CLS) e `loading="lazy"`; LCP con `preload` + `fetchpriority`.
+- **CSS/JS minificati**, **critical CSS inline**, CSS e font caricati in modo asincrono.
+- **Accessibilità**: skip-link, `:focus-visible`, ARIA (`aria-expanded`, `aria-pressed`, `role="dialog"`), contrasti AA, navigazione da tastiera, `robots.txt` + `sitemap.xml`.
+
+> ⚠️ Gli URL assoluti (canonical, OG, JSON-LD, sitemap) puntano a
+> `https://scintillaanselmo0-cell.github.io/amirante-atelier/`. Se colleghi un
+> **dominio personalizzato**, sostituisci quell'URL in `index.html`, `sitemap.xml`
+> e `robots.txt`.
 
 ---
 
