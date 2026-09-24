@@ -59,6 +59,7 @@ const DATA = {
   services: [
     {
       id: "sposa",
+      bookingTypeId: "81adc5d3-a8ec-49e5-8cf8-b49c103dd7c5", // id in bookings_types (Scintilla)
       name: "Prova abito da sposa",
       durationMin: 60,
       kicker: "L'esperienza sposa",
@@ -72,8 +73,9 @@ const DATA = {
     },
     {
       id: "cerimonia",
+      bookingTypeId: "c155e4a8-4927-4c99-bd03-df1f4721a214", // id in bookings_types (Scintilla)
       name: "Sartoria abiti da cerimonia",
-      durationMin: 30,
+      durationMin: 60,
       kicker: "Per gli invitati speciali",
       desc: "Per mamme della sposa, damigelle e ospiti che desiderano un abito impeccabile. Un incontro per definire modello, colore e vestibilità, con la cura sartoriale che ci distingue.",
       expect: [
@@ -85,8 +87,9 @@ const DATA = {
     },
     {
       id: "uomo",
+      bookingTypeId: "6075d087-4146-4abd-a9e4-517f161ea8d8", // id in bookings_types (Scintilla)
       name: "Sartoria uomo",
-      durationMin: 30,
+      durationMin: 60,
       kicker: "Lo sposo e la cerimonia",
       desc: "Per lo sposo e per l'uomo che non rinuncia all'eleganza. Definiamo insieme l'abito perfetto per la cerimonia: taglio, tessuto e dettagli su misura, dal completo classico al più contemporaneo.",
       expect: [
@@ -189,16 +192,19 @@ const DATA = {
     // Date di chiusura straordinaria (formato "YYYY-MM-DD")
     closedDates: [],
 
-    /* ---- BACKEND SUPABASE (agenda condivisa e persistente) ----
-       Compilare url + anonKey per attivare il blocco slot in tempo reale.
-       Se lasciati vuoti, il sito funziona comunque: gli slot vengono
-       generati e la richiesta viene inviata allo staff via WhatsApp
-       (senza blocco agenda server-side). Vedi supabase/schema.sql. */
+    /* ---- BACKEND: GESTIONALE SCINTILLA (Supabase multi-tenant) ----
+       Le prenotazioni del sito finiscono nella tabella condivisa "bookings"
+       del progetto Scintilla, filtrate per client_id (tenant Amirante).
+       La anon key è pubblica (pensata per il frontend): mai la service_role.
+       Se url/anonKey vengono svuotati, il sito continua a funzionare con
+       il solo invio della richiesta via WhatsApp (senza blocco agenda). */
     supabase: {
-      url: "",        // es. "https://xxxx.supabase.co"
-      anonKey: "",    // chiave PUBBLICA anon (mai la service_role!)
-      table: "prenotazioni_occupate", // VISTA pubblica per la lettura slot (no dati personali)
-      tenant: "amirante", // tenant per gestionale multi-tenant "Scintilla"
+      url: "https://qorswaabqqcxpsmngbpo.supabase.co",
+      anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFvcnN3YWFicXFjeHBzbW5nYnBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyMDY4MjAsImV4cCI6MjEwMzc4MjgyMH0.gj-W7QSoy_vlXoSvdkvJcVTYewRBONyx2DM3qVwtqxg",
+      table: "bookings",
+      clientId: "6413409d-a978-48f3-a276-32fc8f6b0743", // tenant Amirante in Scintilla
+      // stati che occupano lo slot (i cancellati/rifiutati non bloccano)
+      activeStatuses: ["in_attesa", "confermata"],
     },
   },
 };
