@@ -99,20 +99,20 @@
   /* ---------------- Accesso dati (Supabase) ---------------- */
 
   const SB = CFG.supabase;
-  const sbEnabled = () => !!(SB && SB.url && SB.anonKey);
+  const sbEnabled = () => !!(SB && SB.url && SB.anonKey && SB.clientId);
+  const sbHeaders = () => ({ apikey: SB.anonKey, Authorization: `Bearer ${SB.anonKey}` });
 
+  // Legge gli slot occupati di Amirante per una data, tramite la funzione
+  // sicura slots_occupati (ritorna solo orario+durata, nessun dato personale).
   async function fetchBookings(iso) {
     if (!sbEnabled()) return null; // nessun backend → nessun blocco server-side
-    const url = `${SB.url}/rest/v1/${SB.table}` +
-      `?select=ora_inizio,ora_fine` +
-      `&data=eq.${iso}` +
-      `&tenant=eq.${encodeURIComponent(SB.tenant)}` +
-      `&stato=neq.annullata`;
-    const res = await fetch(url, {
-      headers: { apikey: SB.anonKey, Authorization: `Bearer ${SB.anonKey}` },
+    const res = await fetch(`${SB.url}/rest/v1/rpc/slots_occupati`, {
+      method: "POST",
+      headers: { ...sbHeaders(), "Content-Type": "application/json" },
+      body: JSON.stringify({ p_client: SB.clientId, p_data: iso }),
     });
     if (!res.ok) throw new Error("read " + res.status);
-    return await res.json(); // [{ora_inizio:"HH:MM:SS", ora_fine:"HH:MM:SS"}]
+    return await res.json(); // [{booking_time:"HH:MM:SS", duration_min:60}]
   }
 
   // Slot liberi per (servizio, data): capienza CFG.capacity condivisa
@@ -126,10 +126,11 @@
     try { booked = (await fetchBookings(iso)) || []; }
     catch (e) { booked = []; /* in caso di errore rete: mostra comunque gli slot */ }
 
-    const busy = booked.map((b) => ({
-      s: hmToMin(b.ora_inizio.slice(0, 5)),
-      e: hmToMin(b.ora_fine.slice(0, 5)),
-    }));
+    const busy = booked.map((b) => {
+      const s = hmToMin(String(b.booking_time).slice(0, 5));
+      const dur = Number(b.duration_min) || service.durationMin || 60;
+      return { s, e: s + dur };
+    });
 
     const cap = CFG.capacity;
     const result = [];
@@ -152,28 +153,39 @@
     if (!sbEnabled()) {
       return { ok: true, mode: "whatsapp" }; // nessun backend: solo notifica staff
     }
-    // RPC atomica (verifica capienza + insert sotto lock) — vedi schema.sql
+
+    // Ricontrollo disponibilità appena prima di inserire (riduce le doppie
+    // prenotazioni concorrenti sulla stessa risorsa/orario).
+    try {
+      const check = await freeSlots(payload.service, payload.iso);
+      const slot = check.find((s) => s.startMin === payload.startMin);
+      if (slot && !slot.available) return { ok: false, error: "slot occupato" };
+    } catch (e) { /* se il controllo fallisce, si prosegue con l'inserimento */ }
+
+    // Inserimento diretto nella tabella condivisa "bookings" di Scintilla.
     const body = {
-      p_tenant: SB.tenant,
-      p_tipo: payload.service.id,
-      p_tipo_label: payload.service.name,
-      p_durata: payload.service.durationMin,
-      p_data: payload.iso,
-      p_ora_inizio: minToHM(payload.startMin) + ":00",
-      p_ora_fine: minToHM(payload.endMin) + ":00",
-      p_capacity: CFG.capacity,
-      p_nome: payload.nome,
-      p_telefono: payload.telefono,
-      p_email: payload.email || null,
-      p_note: payload.note || null,
+      client_id: SB.clientId,
+      booking_type_id: payload.service.bookingTypeId,
+      customer_name: payload.nome,
+      customer_phone: payload.telefono,
+      customer_email: payload.email || null,
+      booking_date: payload.iso,
+      booking_time: minToHM(payload.startMin) + ":00",
+      duration_min: payload.service.durationMin || 60,
+      party_size: 1,
+      status: "in_attesa",
+      notes: payload.note || null,
+      consent_given: true,
+      consent_at: new Date().toISOString(),
+      source: "form",
     };
-    const res = await fetch(`${SB.url}/rest/v1/rpc/book_slot`, {
+    const res = await fetch(`${SB.url}/rest/v1/${SB.table}`, {
       method: "POST",
       headers: {
         apikey: SB.anonKey,
         Authorization: `Bearer ${SB.anonKey}`,
         "Content-Type": "application/json",
-        Prefer: "return=representation",
+        Prefer: "return=minimal",
       },
       body: JSON.stringify(body),
     });
@@ -181,9 +193,7 @@
       const t = await res.text();
       return { ok: false, error: t || ("HTTP " + res.status) };
     }
-    const out = await res.json();
-    if (out && out.ok === false) return { ok: false, error: out.reason || "slot occupato" };
-    return { ok: true, mode: "supabase", data: out };
+    return { ok: true, mode: "supabase" };
   }
 
   function whatsappLink(payload) {
@@ -422,14 +432,18 @@
       createBooking(payload).then((r) => {
         if (r.ok) {
           renderDone(root, payload, r.mode);
-        } else {
+        } else if (r.error && /occupat|pieno|full|conflict/i.test(r.error)) {
+          // slot davvero occupato → invita a sceglierne un altro
           err.textContent = "Questo orario è appena stato prenotato da qualcun altro. Scegli un altro slot.";
           err.hidden = false;
           btn.disabled = false; btn.textContent = "Conferma la prenotazione";
           delete state.slotsCache[state.service.id + "|" + state.iso];
+        } else {
+          // altro errore (rete/permessi): non blocchiamo il cliente, ripieghiamo su WhatsApp
+          renderDone(root, payload, "whatsapp");
         }
       }).catch(() => {
-        // fallback: procedi comunque con notifica WhatsApp
+        // errore imprevisto → fallback WhatsApp
         renderDone(root, payload, "whatsapp");
       });
     });
@@ -444,24 +458,41 @@
     const jsd = new Date(payload.iso + "T00:00:00");
     const dateLabel = jsd.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
     const wa = whatsappLink(payload);
+
+    // Messaggio in base al canale: prenotazione registrata nel gestionale
+    // (Scintilla) → conferma via email dopo l'ok del titolare; oppure
+    // fallback WhatsApp se il backend non è attivo/raggiungibile.
+    let sub;
+    if (mode === "supabase") {
+      sub = payload.email
+        ? "Abbiamo ricevuto la tua richiesta. Riceverai un'email di conferma non appena l'atelier confermerà l'appuntamento."
+        : "Abbiamo ricevuto la tua richiesta. L'atelier ti ricontatterà al numero indicato per confermare l'appuntamento.";
+    } else {
+      sub = "Per completare, invia la richiesta allo staff via WhatsApp: ti risponderemo con la conferma.";
+    }
+
+    const waBtn = (mode === "supabase")
+      ? `<a class="btn bk-wa" href="${wa}" target="_blank" rel="noopener">Avvisa l'atelier su WhatsApp (facoltativo)</a>`
+      : `<a class="btn btn-gold bk-wa" href="${wa}" target="_blank" rel="noopener">Invia richiesta su WhatsApp</a>`;
+
     const wrap = el(`
       <div class="bk bk-done">
         <div class="bk-done-mark">✓</div>
-        <h3>La tua richiesta è stata registrata</h3>
-        <p class="bk-done-sub">Ti aspettiamo in atelier. Per completare, invia la conferma allo staff via WhatsApp: risponderemo con la conferma definitiva.</p>
+        <h3>La tua richiesta è stata inviata</h3>
+        <p class="bk-done-sub">${sub}</p>
         <div class="bk-recap">
           <div><span>Consulenza</span><strong>${payload.service.name}</strong></div>
           <div><span>Data</span><strong>${dateLabel}</strong></div>
-          <div><span>Orario</span><strong>${minToHM(payload.startMin)} – ${minToHM(payload.endMin)}</strong></div>
+          <div><span>Orario</span><strong>${minToHM(payload.startMin)}</strong></div>
           <div><span>A nome di</span><strong>${payload.nome}</strong></div>
         </div>
-        <a class="btn btn-gold bk-wa" href="${wa}" target="_blank" rel="noopener">Invia conferma su WhatsApp</a>
+        ${waBtn}
         <button class="bk-restart" type="button">Prenota un'altra consulenza</button>
       </div>`);
     wrap.querySelector(".bk-restart").addEventListener("click", () => { state.iso = null; state.slot = null; state.slotsCache = {}; renderStep1(root); });
     root.appendChild(wrap);
-    // apre WhatsApp automaticamente (se il browser lo consente)
-    try { window.open(wa, "_blank", "noopener"); } catch (e) {}
+    // Nel fallback WhatsApp apre la chat automaticamente; nel flusso gestionale no.
+    if (mode !== "supabase") { try { window.open(wa, "_blank", "noopener"); } catch (e) {} }
   }
 
   /* ---------------- Export ---------------- */
