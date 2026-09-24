@@ -64,7 +64,7 @@ const DATA = {
       kicker: "L'esperienza sposa",
       desc: "Un tempo tutto dedicato a te. Ti accogliamo in una sala privata per scoprire le nostre collezioni, provare gli abiti e immaginare insieme le linee, i tessuti e i dettagli del giorno più importante.",
       expect: [
-        "Accoglienza riservata in sala prova",
+        "Accoglienza in sala prova",
         "Prova di più modelli e silhouette",
         "Consulenza su tessuti, ricami e personalizzazioni",
       ],
