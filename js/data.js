@@ -116,7 +116,7 @@ const DATA = {
     categories: [
       {
         id: "spose",
-        label: "Spose",
+        label: "Sposa",
         images: [
           "assets/gallery/sposa-01.webp",
           "assets/gallery/sposa-02.webp",
@@ -130,6 +130,16 @@ const DATA = {
           "assets/gallery/sposa-10.webp",
           "assets/gallery/sposa-12.webp",
           "assets/gallery/sposa-13.webp",
+        ],
+      },
+      {
+        // SEZIONE "Cerimonia donna": in attesa delle foto dedicate.
+        // Appena inserisci le immagini qui sotto, la riga compare da sola
+        // (le sezioni senza foto non vengono mostrate).
+        id: "cerimonia",
+        label: "Cerimonia donna",
+        images: [
+          // "assets/gallery-cerimonia/cerimonia-01.webp",
         ],
       },
       {
