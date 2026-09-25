@@ -201,15 +201,25 @@
       weekday: "long", day: "numeric", month: "long", year: "numeric",
     });
     const ora = minToHM(payload.startMin);
-    const msg =
-      `Buongiorno, sono ${payload.nome} e vorrei prenotare una consulenza presso l'Atelier Amirante.%0A%0A` +
-      `Sarei felice di venirvi a trovare per: ${payload.service.name}.%0A` +
-      `Il giorno che preferisco è ${dateLabel}, verso le ${ora}.%0A%0A` +
+    // Costruiamo il messaggio con veri "a capo" e lo codifichiamo tutto in una
+    // volta: così i dettagli (e simboli come € o le lettere accentate) restano
+    // formattati correttamente su WhatsApp, senza righe appiccicate.
+    const lines = [
+      `Buongiorno, sono ${payload.nome} e vorrei prenotare una consulenza presso l'Atelier Amirante.`,
+      ``,
+      `Sarei felice di venirvi a trovare per: ${payload.service.name}.`,
+      `Il giorno che preferisco è ${dateLabel}, verso le ${ora}.`,
+      ``,
       `Potete contattarmi al ${payload.telefono}` +
-      (payload.email ? ` oppure via email a ${payload.email}` : "") + `.%0A` +
-      (payload.note ? `%0AUn'ultima nota: ${payload.note}%0A` : "") +
-      `%0AAttendo una vostra conferma. Grazie!`;
-    return `https://wa.me/${CONTACT.whatsappNumber}?text=${msg}`;
+        (payload.email ? ` oppure via email a ${payload.email}` : "") + `.`,
+    ];
+    if (payload.note) {
+      lines.push("");
+      lines.push(payload.note);
+    }
+    lines.push("");
+    lines.push("Attendo una vostra conferma. Grazie!");
+    return `https://wa.me/${CONTACT.whatsappNumber}?text=${encodeURIComponent(lines.join("\n"))}`;
   }
 
   /* ================================================================
