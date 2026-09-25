@@ -405,6 +405,35 @@
     // Flag di sessione: il cliente dichiara di non avere un'email e chiede
     // la conferma via WhatsApp. In quel caso l'email non è obbligatoria.
     state.wantsWhatsApp = false;
+
+    // Campi aggiuntivi OBBLIGATORI solo per la consulenza sposa.
+    const sposaFields = isSposa ? `
+        <div class="bk-field bk-field-full bk-sposa-title"><span>Per prepararci al meglio alla tua consulenza</span></div>
+        <div class="bk-field">
+          <label>Modello dell'abito *</label>
+          <select name="modello" required>
+            <option value="" selected disabled>Seleziona…</option>
+            <option>Sirena</option>
+            <option>Principessa</option>
+            <option>Impero</option>
+            <option>Non ho idea del modello perfetto per me!</option>
+          </select>
+        </div>
+        <div class="bk-field">
+          <label>Budget indicativo *</label>
+          <select name="budget" required>
+            <option value="" selected disabled>Seleziona…</option>
+            <option>1.000 – 2.500 €</option>
+            <option>2.500 – 4.000 €</option>
+            <option>4.000 – 7.000 €</option>
+            <option>7.000 € e oltre</option>
+          </select>
+        </div>
+        <div class="bk-field"><label>Accompagnatori alla consulenza *</label><input name="accompagnatori" type="number" min="0" max="20" step="1" inputmode="numeric" required placeholder="Numero di persone con te"></div>
+        <div class="bk-field"><label>Data del matrimonio *</label><input name="matrimonio" type="date" required></div>
+        <div class="bk-field bk-field-full"><label>Città di provenienza *</label><input name="provenienza" type="text" required autocomplete="address-level2" placeholder="Es. Napoli"></div>
+    ` : "";
+
     const form = el(`
       <form class="bk-form" novalidate>
         <div class="bk-field"><label>Nome e cognome *</label><input name="nome" type="text" required autocomplete="name"></div>
@@ -415,7 +444,8 @@
           <button type="button" class="bk-noemail">Non hai un'email?</button>
           <p class="bk-noemail-note" hidden>Nessun problema: riceverai la conferma dell'appuntamento su <strong>WhatsApp</strong>. Assicurati che il numero indicato sia corretto.</p>
         </div>
-        <div class="bk-field bk-field-full"><label>${isSposa ? "Data dell'evento e note" : "Note (facoltativo)"}</label><textarea name="note" rows="3" placeholder="${isSposa ? "Es. matrimonio il 12 giugno 2027, cerco un abito…" : "Raccontaci l'occasione…"}"></textarea></div>
+        ${sposaFields}
+        <div class="bk-field bk-field-full"><label>Note (facoltativo)</label><textarea name="note" rows="3" placeholder="${isSposa ? "C'è qualcosa che vuoi dirci prima dell'incontro?" : "Raccontaci l'occasione…"}"></textarea></div>
         <p class="bk-error" hidden></p>
         <button class="btn btn-gold bk-submit" type="submit">Conferma la prenotazione</button>
         <p class="bk-privacy">Inviando la richiesta acconsenti a essere ricontattato/a dall'atelier per la gestione dell'appuntamento.</p>
@@ -461,11 +491,40 @@
           err.hidden = false; return;
         }
       }
+
+      // Campi obbligatori aggiuntivi per la consulenza sposa.
+      let extraNote = "";
+      if (isSposa) {
+        const modello = form.modello.value.trim();
+        const budget = form.budget.value.trim();
+        const accompagnatori = form.accompagnatori.value.trim();
+        const matrimonio = form.matrimonio.value.trim();
+        const provenienza = form.provenienza.value.trim();
+        if (!modello || !budget || accompagnatori === "" || Number(accompagnatori) < 0 || !matrimonio || !provenienza) {
+          err.textContent = "Per la consulenza sposa compila tutti i campi: modello, budget, accompagnatori, data del matrimonio e città di provenienza.";
+          err.hidden = false; return;
+        }
+        const matLabel = (() => {
+          const p = matrimonio.split("-");
+          return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : matrimonio;
+        })();
+        extraNote =
+          "— Dettagli sposa —\n" +
+          "Modello abito: " + modello + "\n" +
+          "Budget: " + budget + "\n" +
+          "Accompagnatori: " + accompagnatori + "\n" +
+          "Data matrimonio: " + matLabel + "\n" +
+          "Provenienza: " + provenienza;
+      }
+
       err.hidden = true;
       const btn = form.querySelector(".bk-submit");
       btn.disabled = true; btn.textContent = "Invio in corso…";
 
-      const payload = { service: state.service, iso: state.iso, startMin: state.slot.startMin, endMin: state.slot.endMin, nome, telefono, email, note };
+      // I dettagli sposa vengono uniti alle note così da comparire nel gestionale
+      // e nell'eventuale messaggio WhatsApp allo staff.
+      const fullNote = [extraNote, note].filter(Boolean).join(note && extraNote ? "\n\n" : "");
+      const payload = { service: state.service, iso: state.iso, startMin: state.slot.startMin, endMin: state.slot.endMin, nome, telefono, email, note: fullNote };
       createBooking(payload).then((r) => {
         if (r.ok) {
           // Se il cliente non ha email, indirizziamo comunque la conferma su
