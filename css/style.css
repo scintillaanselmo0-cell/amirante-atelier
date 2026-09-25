@@ -305,10 +305,16 @@ p{margin:0 0 1em}
 .bk-field{display:flex;flex-direction:column;gap:.5rem}
 .bk-field-full{grid-column:1/-1}
 .bk-field label{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
-.bk-field input,.bk-field textarea{border:1px solid var(--line);background:#fff;padding:.9em 1em;
-  font-family:var(--sans);font-size:.95rem;color:var(--ink);border-radius:0;transition:border-color .3s}
-.bk-field input:focus,.bk-field textarea:focus{outline:none;border-color:var(--gold)}
+.bk-field input,.bk-field textarea,.bk-field select{border:1px solid var(--line);background:#fff;padding:.9em 1em;
+  font-family:var(--sans);font-size:.95rem;color:var(--ink);border-radius:0;transition:border-color .3s;width:100%;box-sizing:border-box}
+.bk-field input:focus,.bk-field textarea:focus,.bk-field select:focus{outline:none;border-color:var(--gold)}
 .bk-field input:disabled{background:#f4f1ea;color:var(--ink-soft);cursor:not-allowed}
+.bk-field select{appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%237a5d2f' stroke-width='1.4' d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 1em center;padding-right:2.6em}
+.bk-sposa-title{margin-top:.4rem}
+.bk-sposa-title span{display:block;border-top:1px solid var(--line);padding-top:1rem;
+  font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
 .bk-email-off label{opacity:.55}
 .bk-noemail{align-self:flex-start;background:none;border:none;padding:.15rem 0;margin:.1rem 0 0;
   font-family:var(--sans);font-size:.78rem;color:var(--gold);cursor:pointer;
