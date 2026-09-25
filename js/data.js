@@ -69,7 +69,7 @@ const DATA = {
         "Prova di più modelli e silhouette",
         "Consulenza su tessuti, ricami e personalizzazioni",
       ],
-      image: "assets/gallery/sposa-03.webp",
+      image: "assets/feature-sposa.webp",
     },
     {
       id: "cerimonia",
@@ -83,7 +83,7 @@ const DATA = {
         "Selezione di modelli e palette colori",
         "Presa misure e tempistiche di realizzazione",
       ],
-      image: "assets/gallery/sposa-06.webp",
+      image: "assets/feature-cerimonia.webp",
     },
     {
       id: "uomo",
@@ -97,7 +97,7 @@ const DATA = {
         "Scelta di tessuti e configurazione dell'abito",
         "Presa misure e prova sartoriale",
       ],
-      image: "assets/gallery-uomo/uomo-14.webp",
+      image: "assets/feature-uomo.webp",
     },
   ],
 
