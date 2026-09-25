@@ -178,11 +178,12 @@ p{margin:0 0 1em}
 .gal-marquee:hover .gal-track{animation-play-state:paused}
 .gal-group{display:flex;gap:14px;padding-right:14px}
 @keyframes gal-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.gal-item{position:relative;overflow:hidden;cursor:pointer;border:0;padding:0;margin:0;
-  background:var(--ivory);height:clamp(320px,42vw,470px);aspect-ratio:3/4;flex:0 0 auto;display:block}
-.gal-item img{width:100%;height:100%;object-fit:cover;display:block;
-  filter:grayscale(.15) contrast(1.03);transition:transform 1.1s var(--ease),filter .8s var(--ease)}
-.gal-item:hover img{transform:scale(1.06);filter:none}
+.gal-item{position:relative;overflow:hidden;border:0;padding:0;margin:0;
+  background:var(--ivory);height:clamp(320px,42vw,470px);aspect-ratio:3/4;flex:0 0 auto;display:block;
+  pointer-events:none;-webkit-user-select:none;user-select:none}
+.gal-item img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;
+  -webkit-user-select:none;user-select:none;-webkit-user-drag:none;-webkit-touch-callout:none;
+  filter:grayscale(.15) contrast(1.03)}
 @media(max-width:640px){.gal-item{height:clamp(260px,66vw,380px)}.gal-group{gap:10px;padding-right:10px}}
 @media(prefers-reduced-motion:reduce){
   .gal-track{animation:none;width:auto}
@@ -434,7 +435,7 @@ p{margin:0 0 1em}
 
 /* focus states visibili e coerenti */
 a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
-select:focus-visible,[tabindex]:focus-visible,.gal-item:focus-visible,
+select:focus-visible,[tabindex]:focus-visible,
 .bk-cal-day:focus-visible,.bk-time:focus-visible{
   outline:2px solid var(--gold);outline-offset:3px;border-radius:2px}
 /* focus su fondi scuri → oro chiaro per contrasto */
