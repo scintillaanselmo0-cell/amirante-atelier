@@ -54,37 +54,40 @@
       <p>${s.d}</p>
     </div>`).join(""));
 
-  /* ---------- GALLERIA (filtrabile per categoria) ---------- */
+  /* ---------- GALLERIA (righe a scorrimento orizzontale automatico) ---------- */
   set("#galKicker", D.gallery.kicker);
   set("#galTitle", D.gallery.title);
-  const galCats = D.gallery.categories;
-  let galCurrent = []; // immagini attualmente mostrate (per il lightbox)
+  // Solo le categorie che hanno almeno una foto: una riga "carosello" ciascuna.
+  const galCats = D.gallery.categories.filter((c) => c.images && c.images.length);
+  const altOf = (id) => id === "uomo" ? "Abito uomo su misura" : (id === "cerimonia" ? "Abito da cerimonia" : "Abito da sposa");
 
-  // barra filtri (se più categorie)
-  if (galCats.length > 1) {
-    const bar = $("#galFilters");
-    if (bar) {
-      bar.innerHTML = galCats.map((cat, i) =>
-        `<button class="gal-filter${i === 0 ? " on" : ""}" type="button" data-cat="${cat.id}" aria-pressed="${i === 0}">${cat.label}</button>`).join("");
-      bar.addEventListener("click", (e) => {
-        const b = e.target.closest(".gal-filter"); if (!b) return;
-        bar.querySelectorAll(".gal-filter").forEach((x) => { x.classList.remove("on"); x.setAttribute("aria-pressed", "false"); });
-        b.classList.add("on"); b.setAttribute("aria-pressed", "true");
-        renderGallery(galCats.find((c) => c.id === b.dataset.cat));
-      });
-    }
+  const galRows = $("#galRows");
+  if (galRows) {
+    galRows.innerHTML = galCats.map((cat, ci) => {
+      const alt = altOf(cat.id);
+      // Le immagini vengono duplicate per un ciclo continuo senza stacchi.
+      const one = cat.images.map((src, i) => `
+        <button class="gal-item" type="button" data-cat="${cat.id}" data-i="${i}" aria-label="Ingrandisci: ${alt} ${i + 1}">
+          <img src="${src}" alt="${alt} — Atelier Amirante, Villaricca (${i + 1})" loading="lazy">
+        </button>`).join("");
+      // velocità proporzionale al numero di foto (px/s costante)
+      const dur = Math.max(24, cat.images.length * 5);
+      return `
+        <div class="gal-row reveal${ci % 2 ? " rev" : ""}">
+          <div class="wrap"><h3 class="gal-row-title">${cat.label}</h3></div>
+          <div class="gal-marquee" aria-label="${cat.label}">
+            <div class="gal-track" style="animation-duration:${dur}s">
+              <div class="gal-group">${one}</div>
+              <div class="gal-group" aria-hidden="true">${one}</div>
+            </div>
+          </div>
+        </div>`;
+    }).join("");
   }
-
-  function renderGallery(cat) {
-    galCurrent = cat.images.slice();
-    const altBase = cat.id === "uomo" ? "Abito uomo da cerimonia" : "Abito da sposa";
-    set("#galGrid", galCurrent.map((src, i) => `
-      <button class="gal-item" type="button" data-i="${i}" aria-label="Ingrandisci: ${altBase} ${i + 1}">
-        <img src="${src}" alt="${altBase} su misura — Atelier Amirante, Villaricca (${i + 1})" width="900" height="1200" loading="lazy">
-        <span class="gal-item-ov" aria-hidden="true"><span class="gal-item-plus">+</span></span>
-      </button>`).join(""));
-  }
-  renderGallery(galCats[0]);
+  // per il lightbox: mappa categoria → immagini
+  const galMap = {};
+  galCats.forEach((c) => { galMap[c.id] = c.images.slice(); });
+  let galCurrent = galCats.length ? galCats[0].images.slice() : [];
 
   /* ---------- ATMOSPHERE ---------- */
   const lv = $("#luxVideo");
@@ -153,8 +156,11 @@
     lb.classList.remove("on"); lb.setAttribute("aria-hidden", "true");
     document.body.style.overflow = ""; if (lbTrigger && lbTrigger.focus) lbTrigger.focus();
   };
-  $("#galGrid").addEventListener("click", (e) => {
-    const t = e.target.closest(".gal-item[data-i]"); if (t) open(+t.dataset.i);
+  const galRowsEl = $("#galRows");
+  if (galRowsEl) galRowsEl.addEventListener("click", (e) => {
+    const t = e.target.closest(".gal-item[data-i]"); if (!t) return;
+    if (t.dataset.cat && galMap[t.dataset.cat]) galCurrent = galMap[t.dataset.cat];
+    open(+t.dataset.i);
   });
   $("#lbClose").addEventListener("click", close);
   $("#lbPrev").addEventListener("click", () => show(gi - 1));
