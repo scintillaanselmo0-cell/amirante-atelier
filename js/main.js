@@ -67,9 +67,9 @@
       const alt = altOf(cat.id);
       // Le immagini vengono duplicate per un ciclo continuo senza stacchi.
       const one = cat.images.map((src, i) => `
-        <button class="gal-item" type="button" data-cat="${cat.id}" data-i="${i}" aria-label="Ingrandisci: ${alt} ${i + 1}">
-          <img src="${src}" alt="${alt} — Atelier Amirante, Villaricca (${i + 1})" loading="lazy">
-        </button>`).join("");
+        <div class="gal-item">
+          <img src="${src}" alt="${alt} — Atelier Amirante, Villaricca (${i + 1})" loading="lazy" draggable="false">
+        </div>`).join("");
       // velocità proporzionale al numero di foto (px/s costante)
       const dur = Math.max(24, cat.images.length * 5);
       return `
@@ -156,12 +156,7 @@
     lb.classList.remove("on"); lb.setAttribute("aria-hidden", "true");
     document.body.style.overflow = ""; if (lbTrigger && lbTrigger.focus) lbTrigger.focus();
   };
-  const galRowsEl = $("#galRows");
-  if (galRowsEl) galRowsEl.addEventListener("click", (e) => {
-    const t = e.target.closest(".gal-item[data-i]"); if (!t) return;
-    if (t.dataset.cat && galMap[t.dataset.cat]) galCurrent = galMap[t.dataset.cat];
-    open(+t.dataset.i);
-  });
+  // Le immagini della galleria non sono cliccabili: nessun apri-lightbox qui.
   $("#lbClose").addEventListener("click", close);
   $("#lbPrev").addEventListener("click", () => show(gi - 1));
   $("#lbNext").addEventListener("click", () => show(gi + 1));
