@@ -402,16 +402,46 @@
     wrap.appendChild(head);
 
     const isSposa = state.service.id === "sposa";
+    // Flag di sessione: il cliente dichiara di non avere un'email e chiede
+    // la conferma via WhatsApp. In quel caso l'email non è obbligatoria.
+    state.wantsWhatsApp = false;
     const form = el(`
       <form class="bk-form" novalidate>
         <div class="bk-field"><label>Nome e cognome *</label><input name="nome" type="text" required autocomplete="name"></div>
         <div class="bk-field"><label>Telefono *</label><input name="telefono" type="tel" required autocomplete="tel" inputmode="tel"></div>
-        <div class="bk-field"><label>Email (facoltativo)</label><input name="email" type="email" autocomplete="email"></div>
+        <div class="bk-field">
+          <label>Email *</label>
+          <input name="email" type="email" required autocomplete="email">
+          <button type="button" class="bk-noemail">Non hai un'email?</button>
+          <p class="bk-noemail-note" hidden>Nessun problema: riceverai la conferma dell'appuntamento su <strong>WhatsApp</strong>. Assicurati che il numero indicato sia corretto.</p>
+        </div>
         <div class="bk-field bk-field-full"><label>${isSposa ? "Data dell'evento e note" : "Note (facoltativo)"}</label><textarea name="note" rows="3" placeholder="${isSposa ? "Es. matrimonio il 12 giugno 2027, cerco un abito…" : "Raccontaci l'occasione…"}"></textarea></div>
         <p class="bk-error" hidden></p>
         <button class="btn btn-gold bk-submit" type="submit">Conferma la prenotazione</button>
         <p class="bk-privacy">Inviando la richiesta acconsenti a essere ricontattato/a dall'atelier per la gestione dell'appuntamento.</p>
       </form>`);
+
+    // Toggle "Non hai un'email?" → conferma via WhatsApp
+    const emailField = form.querySelector('input[name="email"]');
+    const noEmailBtn = form.querySelector(".bk-noemail");
+    const noEmailNote = form.querySelector(".bk-noemail-note");
+    noEmailBtn.addEventListener("click", () => {
+      state.wantsWhatsApp = !state.wantsWhatsApp;
+      if (state.wantsWhatsApp) {
+        emailField.required = false;
+        emailField.value = "";
+        emailField.disabled = true;
+        emailField.closest(".bk-field").classList.add("bk-email-off");
+        noEmailNote.hidden = false;
+        noEmailBtn.textContent = "Ho un'email, preferisco usarla";
+      } else {
+        emailField.required = true;
+        emailField.disabled = false;
+        emailField.closest(".bk-field").classList.remove("bk-email-off");
+        noEmailNote.hidden = true;
+        noEmailBtn.textContent = "Non hai un'email?";
+      }
+    });
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -424,6 +454,13 @@
         err.textContent = "Inserisci nome e un numero di telefono valido.";
         err.hidden = false; return;
       }
+      // Email obbligatoria, salvo che il cliente abbia scelto la conferma su WhatsApp.
+      if (!state.wantsWhatsApp) {
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          err.textContent = "Inserisci un'email valida, oppure tocca «Non hai un'email?» per la conferma su WhatsApp.";
+          err.hidden = false; return;
+        }
+      }
       err.hidden = true;
       const btn = form.querySelector(".bk-submit");
       btn.disabled = true; btn.textContent = "Invio in corso…";
@@ -431,7 +468,9 @@
       const payload = { service: state.service, iso: state.iso, startMin: state.slot.startMin, endMin: state.slot.endMin, nome, telefono, email, note };
       createBooking(payload).then((r) => {
         if (r.ok) {
-          renderDone(root, payload, r.mode);
+          // Se il cliente non ha email, indirizziamo comunque la conferma su
+          // WhatsApp (la prenotazione resta registrata nel gestionale).
+          renderDone(root, payload, state.wantsWhatsApp ? "whatsapp" : r.mode);
         } else if (r.error && /occupat|pieno|full|conflict/i.test(r.error)) {
           // slot davvero occupato → invita a sceglierne un altro
           err.textContent = "Questo orario è appena stato prenotato da qualcun altro. Scegli un altro slot.";
