@@ -308,6 +308,15 @@ p{margin:0 0 1em}
 .bk-field input,.bk-field textarea{border:1px solid var(--line);background:#fff;padding:.9em 1em;
   font-family:var(--sans);font-size:.95rem;color:var(--ink);border-radius:0;transition:border-color .3s}
 .bk-field input:focus,.bk-field textarea:focus{outline:none;border-color:var(--gold)}
+.bk-field input:disabled{background:#f4f1ea;color:var(--ink-soft);cursor:not-allowed}
+.bk-email-off label{opacity:.55}
+.bk-noemail{align-self:flex-start;background:none;border:none;padding:.15rem 0;margin:.1rem 0 0;
+  font-family:var(--sans);font-size:.78rem;color:var(--gold);cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;transition:opacity .2s}
+.bk-noemail:hover{opacity:.7}
+.bk-noemail-note{font-size:.78rem;line-height:1.5;color:var(--ink-soft);margin:.35rem 0 0;
+  background:#f6f1e6;border-left:2px solid var(--gold);padding:.6rem .8rem}
+.bk-noemail-note strong{color:var(--ink)}
 .bk-error{grid-column:1/-1;color:#a3402f;font-size:.85rem;margin:0}
 .bk-submit{grid-column:1/-1;justify-content:center;margin-top:.4rem}
 .bk-privacy{grid-column:1/-1;font-size:.72rem;color:var(--ink-soft);text-align:center;margin:.4rem 0 0}
@@ -351,7 +360,7 @@ p{margin:0 0 1em}
 .footer{background:var(--ink);color:rgba(242,234,220,.72);padding:clamp(56px,8vw,90px) 0 34px}
 .footer-top{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:clamp(30px,5vw,60px);
   padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.1)}
-.footer-logo img{height:34px;margin-bottom:1.4rem}
+.footer-logo img{height:34px;width:auto;margin-bottom:1.4rem}
 .footer-top p{font-size:.92rem;max-width:34ch}
 .footer-col h5{font-family:var(--sans);font-weight:400;font-size:.68rem;letter-spacing:.2em;
   text-transform:uppercase;color:var(--gold-2);margin:0 0 1.1rem}
