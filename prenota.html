@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prenota la tua consulenza — Atelier Amirante</title>
+<meta name="description" content="Prenota online la tua consulenza all'Atelier Amirante — Meg Shop, sartoria d'alta moda a Villaricca (NA). Scegli servizio, giorno e orario.">
+<meta name="theme-color" content="#FBF8F2">
+<meta name="robots" content="noindex,follow">
+<meta property="og:title" content="Prenota la tua consulenza — Atelier Amirante">
+<meta property="og:description" content="Scegli servizio, giorno e orario: riceverai conferma dall'atelier.">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.min.css">
+<style>
+  /* La pagina prenotazione non ha animazioni reveal: mostra tutto subito */
+  .reveal{opacity:1 !important;transform:none !important}
+  html,body{min-height:100%}
+  body{background:var(--paper);display:block}
+  .pren-wrap{max-width:var(--maxw);margin:0 auto;padding:clamp(30px,6vw,64px) clamp(20px,5vw,48px) 20px}
+  .pren-head{text-align:center;margin-bottom:clamp(26px,4vw,44px)}
+  .pren-logo{height:clamp(42px,6vw,66px);width:auto;margin:0 auto 20px;display:block}
+  .pren-kicker{display:block;font-family:var(--sans);font-weight:400;font-size:.72rem;
+    letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+  .pren-head h1{font-family:var(--serif);font-weight:400;font-style:italic;
+    font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;margin:0 0 .5rem;color:var(--ink)}
+  .pren-head p{font-family:var(--sans);font-weight:300;font-size:clamp(.95rem,1.6vw,1.1rem);
+    color:var(--ink-soft);max-width:560px;margin:0 auto}
+  .pren-divider{display:flex;align-items:center;justify-content:center;gap:14px;width:200px;margin:22px auto 0}
+  .pren-divider span{height:1px;flex:1;background:linear-gradient(90deg,transparent,var(--line),transparent)}
+  .pren-divider i{width:7px;height:7px;transform:rotate(45deg);background:var(--gold);flex:0 0 auto}
+  .pren-foot{text-align:center;margin-top:clamp(40px,6vw,64px);padding:26px 20px 40px;
+    border-top:1px solid var(--line)}
+  .pren-foot .fn{font-family:var(--serif);font-size:1.05rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  .pren-foot .fd{font-family:var(--sans);font-size:.82rem;color:var(--ink-soft);margin-top:8px;line-height:1.7}
+  .pren-foot a{color:var(--gold);text-decoration:none}
+  .pren-foot .dot{color:var(--gold);margin:0 .4em}
+</style>
+</head>
+<body>
+  <main class="pren-wrap">
+    <header class="pren-head">
+      <img class="pren-logo" src="assets/logo-dark.png" alt="Atelier Amirante — Meg Shop" width="900" height="233">
+      <span class="pren-kicker">Prenotazioni</span>
+      <h1>Prenota la tua consulenza</h1>
+      <p>Scegli il servizio, il giorno e l'orario che preferisci: riceverai conferma direttamente dall'atelier.</p>
+      <div class="pren-divider" aria-hidden="true"><span></span><i></i><span></span></div>
+    </header>
+
+    <!-- Il motore di prenotazione si monta qui (js/booking.min.js) -->
+    <div id="booking-app"></div>
+
+    <footer class="pren-foot">
+      <div class="fn">Atelier Amirante <span class="dot">◆</span> Meg Shop</div>
+      <div class="fd">
+        Via della Libertà 1174, Villaricca (NA)<br>
+        <a href="tel:+390818186855">081 818 6855</a> · WhatsApp <a href="https://wa.me/393516232607" target="_blank" rel="noopener">+39 351 623 2607</a>
+      </div>
+    </footer>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/booking.min.js"></script>
+</body>
+</html>
