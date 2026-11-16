@@ -24,13 +24,26 @@ const DATA = {
     // WhatsApp dedicato alle prenotazioni consulenze
     whatsapp: "+39 351 623 2607",
     whatsappNumber: "393516232607", // formato internazionale senza + per wa.me
-    email: "", // (opzionale) inserire se disponibile
+    email: "atelieramirante@gmail.com",
+    emailHref: "mailto:atelieramirante@gmail.com",
     address: "Via della Libertà, 1174",
     city: "80010 Villaricca (NA)",
     mapsQuery: "Atelier Amirante Meg Shop Via della Libertà 1174 Villaricca",
     mapsEmbed: "https://www.google.com/maps?q=Via+della+Libert%C3%A0+1174+Villaricca+NA&output=embed",
     instagram: "https://www.instagram.com/amirante.megshop/",
     facebook: "https://www.facebook.com/atelieramirante/?locale=it_IT",
+  },
+
+  /* ---------- DATI LEGALI / SOCIETARI (footer) ----------
+     Obbligatori per legge (art. 2250 c.c.) per una società di capitali.
+     La sede legale può differire dal punto vendita/atelier qui sopra. */
+  legal: {
+    company: "Mega Eleganza S.r.l.",
+    vat: "08367001214",              // Partita IVA / Codice Fiscale
+    regAddress: "Via Aniello Palumbo 58, 80014 Giugliano in Campania (NA)", // sede legale
+    capital: "€ 10.000,00",          // capitale sociale
+    pec: "megaeleganzasrl@cgn.legalmail.it",
+    rep: "Emilio Amirante",          // legale rappresentante
   },
 
   /* ---------- ORARI (mostrati nel footer / contatti) ---------- */

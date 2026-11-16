@@ -110,10 +110,28 @@
   set("#fAbout", D.brand.subclaim);
   set("#fAddr", `${c.address}, ${c.city}`);
   const fp = $("#fPhone"); fp.textContent = c.phone; fp.href = c.phoneHref;
+  const fe = $("#fEmail");
+  if (fe) {
+    if (c.email) { fe.textContent = c.email; fe.href = c.emailHref || `mailto:${c.email}`; }
+    else { fe.style.display = "none"; }
+  }
   $("#fWa").href = `https://wa.me/${c.whatsappNumber}`;
   $("#fIg").href = c.instagram || "#";
   $("#fFb").href = c.facebook || "#";
   $("#year").textContent = new Date().getFullYear();
+
+  /* ---------- DATI LEGALI (footer) ---------- */
+  const lg = D.legal, fl = $("#fLegal");
+  if (lg && fl) {
+    const parts = [];
+    if (lg.company) parts.push(`<strong>${lg.company}</strong>`);
+    if (lg.vat) parts.push(`P.IVA / C.F. ${lg.vat}`);
+    if (lg.regAddress) parts.push(`Sede legale: ${lg.regAddress}`);
+    if (lg.capital) parts.push(`Capitale sociale ${lg.capital}`);
+    if (lg.rep) parts.push(`Rappresentante legale: ${lg.rep}`);
+    if (lg.pec) parts.push(`PEC: <a href="mailto:${lg.pec}">${lg.pec}</a>`);
+    fl.innerHTML = parts.join(" &nbsp;·&nbsp; ");
+  }
 
   /* ---------- NAV scroll / menu ---------- */
   const nav = $("#nav");
