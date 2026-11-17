@@ -25,10 +25,11 @@
     padding:clamp(40px,6vw,84px) clamp(26px,4vw,64px)}
   .ts-hero-content > *{position:relative;z-index:1}
   .ts-hero-media{position:relative;flex:1 1 auto;overflow:hidden;background:#0d0b0a}
-  .ts-hero-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;z-index:0;
-    -webkit-user-select:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
+  .ts-hero-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;z-index:3;
+    -webkit-user-select:none;user-select:none;-webkit-user-drag:none;pointer-events:none;transition:opacity .7s ease}
+  .ts-hero.playing .ts-hero-poster{opacity:0}
   .ts-yt{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
-  .ts-yt iframe{position:absolute;top:50%;left:50%;width:118%;height:178%;transform:translate(-50%,-50%);border:0}
+  .ts-yt iframe{position:absolute!important;top:50%;left:50%;width:118%!important;height:178%!important;transform:translate(-50%,-50%);border:0;pointer-events:none}
   .ts-hero-media::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
     background:linear-gradient(90deg,#12100E 0,rgba(18,16,14,.45) 12%,rgba(18,16,14,0) 34%),
       linear-gradient(180deg,rgba(12,10,8,.2),rgba(12,10,8,.3))}
@@ -117,7 +118,7 @@
 <header class="ts-hero">
   <div class="ts-hero-media">
     <img class="ts-hero-poster" src="https://evalendel.com/wp-content/uploads/2026/08/eva-lendel-venus-reya-0.jpg" alt="Abito da sposa Eva Lendel — Reya, Venus Collection" referrerpolicy="no-referrer" draggable="false" loading="eager">
-    <div class="ts-yt" id="ytReya"></div>
+    <div class="ts-yt"><div id="ytReya"></div></div>
   </div>
   <div class="ts-hero-content">
     <a href="index.html" aria-label="Atelier Amirante"><img class="ts-logo" src="assets/logo-light.webp" alt="Atelier Amirante — Meg Shop"></a>
@@ -194,25 +195,58 @@
 (function(){
   "use strict";
   // --- Video di sfondo hero: YouTube (abito Reya, Venus Collection) ---
-  // L'URL dell'embed usa location.origin, cosi' funziona su amiranteatelier.it
-  // e sul dominio github.io. L'iframe e' sovradimensionato via CSS per
-  // ritagliare le sovrimpressioni "Shorts" di YouTube e mostrare solo il video.
+  // Il poster dell'abito resta davanti al player finche' il video non e'
+  // DAVVERO in riproduzione (evento PLAYING dell'API ufficiale): cosi' la
+  // fase di buffering/pausa — quando YouTube mostra il tasto play — non si
+  // vede mai. L'iframe e' sovradimensionato via CSS per ritagliare le
+  // sovrimpressioni "Shorts". origin=location.origin -> funziona su ogni dominio.
   (function(){
     var box = document.getElementById("ytReya");
+    var hero = document.querySelector(".ts-hero");
     if (!box) return;
-    var id = "eL24bosVcyQ";
-    var p = "autoplay=1&mute=1&controls=0&showinfo=0&rel=0&playsinline=1&modestbranding=1" +
-            "&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=" + id +
-            "&enablejsapi=1&origin=" + encodeURIComponent(location.origin);
-    var f = document.createElement("iframe");
-    f.src = "https://www.youtube-nocookie.com/embed/" + id + "?" + p;
-    f.title = "Video abito Eva Lendel — Reya";
-    f.setAttribute("allow", "autoplay; encrypted-media; picture-in-picture");
-    f.setAttribute("frameborder", "0");
-    f.setAttribute("tabindex", "-1");
-    f.setAttribute("aria-hidden", "true");
-    f.loading = "eager";
-    box.appendChild(f);
+    var ID = "eL24bosVcyQ";
+    var built = false;
+    function reveal(){ if (hero) hero.classList.add("playing"); }
+    function pvars(){
+      return { autoplay:1, mute:1, controls:0, showinfo:0, rel:0, playsinline:1,
+               modestbranding:1, iv_load_policy:3, disablekb:1, fs:0, loop:1,
+               playlist:ID, origin: location.origin };
+    }
+    // Fallback: iframe "grezzo" se l'API non si carica (rivela dopo un attimo)
+    function buildPlain(){
+      if (built) return; built = true;
+      var v = pvars(), p = [];
+      for (var k in v) p.push(k + "=" + encodeURIComponent(v[k]));
+      p.push("enablejsapi=1");
+      var f = document.createElement("iframe");
+      f.src = "https://www.youtube-nocookie.com/embed/" + ID + "?" + p.join("&");
+      f.title = "Video abito Eva Lendel — Reya";
+      f.setAttribute("allow", "autoplay; encrypted-media; picture-in-picture");
+      f.setAttribute("frameborder", "0");
+      f.setAttribute("tabindex", "-1");
+      f.setAttribute("aria-hidden", "true");
+      box.appendChild(f);
+      setTimeout(reveal, 1800);
+    }
+    // API ufficiale: nasconde il poster SOLO quando parte davvero la riproduzione
+    window.onYouTubeIframeAPIReady = function(){
+      if (built) return; built = true;
+      try {
+        new YT.Player(box, {
+          videoId: ID,
+          host: "https://www.youtube-nocookie.com",
+          playerVars: pvars(),
+          events: {
+            onReady: function(e){ try { e.target.mute(); e.target.playVideo(); } catch(_){} },
+            onStateChange: function(e){ if (e.data === YT.PlayerState.PLAYING) reveal(); }
+          }
+        });
+      } catch(err) { built = false; buildPlain(); }
+    };
+    var tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+    setTimeout(function(){ if (!built) buildPlain(); }, 4500);
   })();
 
   // --- Galleria abiti Eva Lendel (immagini ufficiali Eva Lendel) ---
