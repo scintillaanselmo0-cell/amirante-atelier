@@ -294,9 +294,9 @@
     });
 
     // ---- Trascinamento manuale (riprende da solo al rilascio) ----
-    var startX = 0, startOffset = 0, moved = 0;
+    var startX = 0, startOffset = 0, moved = 0, pressed = false;
     mq.addEventListener("pointerdown", function(e){
-      dragging = true; moved = 0; startX = e.clientX; startOffset = offset;
+      pressed = true; dragging = true; moved = 0; startX = e.clientX; startOffset = offset;
       mq.classList.add("dragging");
       try { mq.setPointerCapture(e.pointerId); } catch(_){}
     });
@@ -309,17 +309,19 @@
     function endDrag(){ if (dragging){ dragging = false; mq.classList.remove("dragging"); } }
     // Al rilascio: se non si e' trascinato (tap/click), apri la lightbox sulla
     // card sotto il puntatore. Gestito qui (non su "click") perche' il pointer
-    // capture del drag puo' dirottare il target del click su desktop.
+    // capture del drag puo' dirottare il target del click su desktop. Usa il flag
+    // "pressed" (non "dragging") perche' eventi pointerleave spuri possono
+    // azzerare "dragging" tra la pressione e il rilascio.
     mq.addEventListener("pointerup", function(e){
-      var tap = dragging && moved <= 6;
-      endDrag();
+      var tap = pressed && moved <= 6;
+      pressed = false; endDrag();
       if (tap){
         var el = document.elementFromPoint(e.clientX, e.clientY);
         var c = (el && el.closest) ? el.closest(".ts-mq-card") : null;
         if (c) open(parseInt(c.getAttribute("data-i"), 10) || 0);
       }
     });
-    mq.addEventListener("pointercancel", endDrag);
+    mq.addEventListener("pointercancel", function(){ pressed = false; endDrag(); });
     mq.addEventListener("pointerleave", endDrag);
 
     // ---- Lightbox ----
