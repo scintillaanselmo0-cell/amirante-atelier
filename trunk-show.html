@@ -307,7 +307,18 @@
       offset = startOffset - dx; wrap(); apply();
     });
     function endDrag(){ if (dragging){ dragging = false; mq.classList.remove("dragging"); } }
-    mq.addEventListener("pointerup", endDrag);
+    // Al rilascio: se non si e' trascinato (tap/click), apri la lightbox sulla
+    // card sotto il puntatore. Gestito qui (non su "click") perche' il pointer
+    // capture del drag puo' dirottare il target del click su desktop.
+    mq.addEventListener("pointerup", function(e){
+      var tap = dragging && moved <= 6;
+      endDrag();
+      if (tap){
+        var el = document.elementFromPoint(e.clientX, e.clientY);
+        var c = (el && el.closest) ? el.closest(".ts-mq-card") : null;
+        if (c) open(parseInt(c.getAttribute("data-i"), 10) || 0);
+      }
+    });
     mq.addEventListener("pointercancel", endDrag);
     mq.addEventListener("pointerleave", endDrag);
 
@@ -325,12 +336,6 @@
     function close(){ lb.classList.remove("on"); lb.setAttribute("aria-hidden","true"); paused = false; }
     function nav(dir){ cur = (cur + dir + DRESSES.length) % DRESSES.length; render(); }
 
-    // Click su una card = apre la lightbox, SOLO se non si stava trascinando.
-    track.addEventListener("click", function(e){
-      var c = e.target.closest(".ts-mq-card");
-      if (!c || moved > 6) return;
-      open(parseInt(c.getAttribute("data-i"), 10) || 0);
-    });
     document.getElementById("lbClose").addEventListener("click", close);
     document.getElementById("lbPrev").addEventListener("click", function(e){ e.stopPropagation(); nav(-1); });
     document.getElementById("lbNext").addEventListener("click", function(e){ e.stopPropagation(); nav(1); });
