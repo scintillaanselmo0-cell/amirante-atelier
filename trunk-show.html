@@ -25,11 +25,8 @@
     padding:clamp(40px,6vw,84px) clamp(26px,4vw,64px)}
   .ts-hero-content > *{position:relative;z-index:1}
   .ts-hero-media{position:relative;flex:1 1 auto;overflow:hidden;background:#0d0b0a}
-  .ts-hero-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;z-index:3;
-    -webkit-user-select:none;user-select:none;-webkit-user-drag:none;pointer-events:none;transition:opacity .7s ease}
-  .ts-hero.playing .ts-hero-poster{opacity:0}
-  .ts-yt{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
-  .ts-yt iframe{position:absolute!important;top:50%;left:50%;width:118%!important;height:178%!important;transform:translate(-50%,-50%);border:0;pointer-events:none}
+  .ts-hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;
+    pointer-events:none;-webkit-user-select:none;user-select:none}
   .ts-hero-media::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
     background:linear-gradient(90deg,#12100E 0,rgba(18,16,14,.45) 12%,rgba(18,16,14,0) 34%),
       linear-gradient(180deg,rgba(12,10,8,.2),rgba(12,10,8,.3))}
@@ -117,8 +114,9 @@
 <!-- ===== HERO ===== -->
 <header class="ts-hero">
   <div class="ts-hero-media">
-    <img class="ts-hero-poster" src="https://evalendel.com/wp-content/uploads/2026/08/eva-lendel-venus-reya-0.jpg" alt="Abito da sposa Eva Lendel — Reya, Venus Collection" referrerpolicy="no-referrer" draggable="false" loading="eager">
-    <div class="ts-yt"><div id="ytReya"></div></div>
+    <video class="ts-hero-vid" autoplay muted loop playsinline preload="auto" poster="assets/trunk-poster.jpg?v=21" aria-hidden="true" tabindex="-1">
+      <source src="assets/trunk-video.mp4?v=21" type="video/mp4">
+    </video>
   </div>
   <div class="ts-hero-content">
     <a href="index.html" aria-label="Atelier Amirante"><img class="ts-logo" src="assets/logo-light.webp" alt="Atelier Amirante — Meg Shop"></a>
@@ -188,36 +186,8 @@
 <script>
 (function(){
   "use strict";
-  // --- Video di sfondo hero: YouTube (abito Reya, Venus Collection) ---
-  // Il poster dell'abito resta davanti al player finche' il video non e'
-  // DAVVERO in riproduzione (evento PLAYING dell'API ufficiale): cosi' la
-  // fase di buffering/pausa — quando YouTube mostra il tasto play — non si
-  // vede mai. L'iframe e' sovradimensionato via CSS per ritagliare le
-  // sovrimpressioni "Shorts". origin=location.origin -> funziona su ogni dominio.
-  (function(){
-    var box = document.getElementById("ytReya");
-    var hero = document.querySelector(".ts-hero");
-    if (!box) return;
-    var ID = "eL24bosVcyQ";
-    function reveal(){ if (hero) hero.classList.add("playing"); }
-    // iframe con loop nativo (continuo, non si blocca). Il poster resta davanti
-    // nei primi istanti per coprire il tasto play del buffering iniziale.
-    var v = { autoplay:1, mute:1, controls:0, showinfo:0, rel:0, playsinline:1,
-              modestbranding:1, iv_load_policy:3, disablekb:1, fs:0,
-              loop:1, playlist:ID, enablejsapi:1, origin: location.origin };
-    var p = [];
-    for (var k in v) p.push(k + "=" + encodeURIComponent(v[k]));
-    var f = document.createElement("iframe");
-    f.id = "reyaFrame";
-    f.src = "https://www.youtube-nocookie.com/embed/" + ID + "?" + p.join("&");
-    f.title = "Video abito Eva Lendel — Reya";
-    f.setAttribute("allow", "autoplay; encrypted-media; picture-in-picture");
-    f.setAttribute("frameborder", "0");
-    f.setAttribute("tabindex", "-1");
-    f.setAttribute("aria-hidden", "true");
-    box.appendChild(f);
-    setTimeout(reveal, 2500);
-  })();
+  // Lo sfondo dell'hero e' un <video> nativo (assets/trunk-video.mp4): loop
+  // continuo, muto, autoplay inline -> nessun tasto play ne' controlli.
 
   // --- Galleria abiti Eva Lendel (immagini ufficiali Eva Lendel) ---
   var DRESSES = [
