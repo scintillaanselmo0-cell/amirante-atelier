@@ -21,9 +21,11 @@
   /* ===== HERO scuro ===== */
   .ts-hero{position:relative;background:#12100E;color:#f3ece0;text-align:center;overflow:hidden;
     padding:clamp(54px,10vw,96px) 22px clamp(46px,8vw,78px)}
-  .ts-hero::before{content:"";position:absolute;inset:0;z-index:0;opacity:.9;
-    background:radial-gradient(120% 70% at 50% -10%,rgba(201,162,75,.18),transparent 60%)}
-  .ts-hero > *{position:relative;z-index:1}
+  .ts-hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+  .ts-hero::before{content:"";position:absolute;inset:0;z-index:1;
+    background:radial-gradient(120% 70% at 50% -10%,rgba(201,162,75,.2),transparent 60%),
+      linear-gradient(180deg,rgba(18,16,14,.58),rgba(18,16,14,.78))}
+  .ts-hero > *{position:relative;z-index:2}
   .ts-logo{height:clamp(38px,5vw,56px);width:auto;margin:0 auto 26px;display:block;filter:drop-shadow(0 6px 20px rgba(0,0,0,.4))}
   .ts-eyebrow{font-family:var(--sans);font-weight:400;font-size:.74rem;letter-spacing:.32em;text-transform:uppercase;color:#C9A24B;margin-bottom:14px}
   .ts-title{font-family:var(--serif);font-weight:400;font-style:italic;font-size:clamp(3rem,10vw,6rem);line-height:.98;margin:0}
@@ -90,6 +92,9 @@
 
 <!-- ===== HERO ===== -->
 <header class="ts-hero">
+  <video class="ts-hero-vid" autoplay muted loop playsinline preload="metadata" poster="assets/trunk-poster.jpg?v=19" aria-hidden="true" tabindex="-1">
+    <source src="assets/trunk-video.mp4?v=19" type="video/mp4">
+  </video>
   <a href="index.html" aria-label="Atelier Amirante"><img class="ts-logo" src="assets/logo-light.webp" alt="Atelier Amirante — Meg Shop"></a>
   <div class="ts-eyebrow">Trunk Show · Evento esclusivo</div>
   <h1 class="ts-title">Eva Lendel</h1>
