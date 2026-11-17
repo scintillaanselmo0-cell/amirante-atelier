@@ -305,9 +305,10 @@
 
     const cols = el(`<div class="bk-cols bk-cols-cal"></div>`);
 
-    // colonna calendario
+    // colonna giorno: con onlyDates mostra solo le date dedicate (chip),
+    // altrimenti il calendario mensile completo.
     const dcol = el(`<div class="bk-cal"><h4>Scegli il giorno</h4></div>`);
-    dcol.appendChild(buildCalendar(root));
+    dcol.appendChild((CFG.onlyDates && CFG.onlyDates.length) ? buildDateChips(root) : buildCalendar(root));
     cols.appendChild(dcol);
 
     // colonna orari
@@ -358,6 +359,25 @@
   const mIdx = (y, m) => y * 12 + (m - 1);
 
   // Costruisce la griglia calendario del mese state.calY/calM.
+  // Selettore compatto: mostra SOLO le date dedicate (CFG.onlyDates).
+  function buildDateChips(root) {
+    const wrap = el(`<div class="bk-date-list bk-date-list-fixed"></div>`);
+    (CFG.onlyDates || []).slice().sort().forEach((iso) => {
+      const [y, m, d] = iso.split("-").map(Number);
+      if (!isBookable(y, m, d)) return; // niente date passate/chiuse
+      const wd = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+      const btn = el(`<button class="bk-date${state.iso === iso ? " sel" : ""}" type="button">
+          <span class="bk-date-dow">${dayNames[wd]}</span>
+          <span class="bk-date-num">${pad(d)}</span>
+          <span class="bk-date-mon">${monthNames[m - 1].slice(0, 3)}</span>
+        </button>`);
+      btn.addEventListener("click", () => { state.iso = iso; state.slot = null; renderStep2(root); });
+      wrap.appendChild(btn);
+    });
+    if (!wrap.children.length) wrap.appendChild(el(`<p class="bk-hint">Le date dell'evento non sono più disponibili.</p>`));
+    return wrap;
+  }
+
   function buildCalendar(root) {
     const y = state.calY, m = state.calM;
     const { min, max, today } = dateBounds();
