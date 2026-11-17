@@ -91,6 +91,9 @@
   // Un giorno è prenotabile se: giorno di apertura, non chiuso,
   // non passato e non oltre l'orizzonte.
   function isBookable(y, m, d) {
+    // Allowlist di date (es. i soli giorni del Trunk Show): se impostata,
+    // sono prenotabili solo quelle date.
+    if (CFG.onlyDates && CFG.onlyDates.length && !CFG.onlyDates.includes(toISODate(y, m, d))) return false;
     if (!isOpenDay(y, m, d)) return false;
     const { min, max } = dateBounds();
     const cur = Date.UTC(y, m - 1, d);
@@ -236,6 +239,12 @@
   function mount() {
     const root = document.getElementById("booking-app");
     if (!root) return;
+    // Servizio fisso (es. pagina evento Trunk Show): salta la scelta del
+    // servizio e va direttamente al calendario di quella consulenza.
+    if (CFG.fixedService) {
+      const svc = SERVICES.find((s) => s.id === CFG.fixedService);
+      if (svc) { state.service = svc; state.iso = null; state.slot = null; renderStep2(root); return; }
+    }
     renderStep1(root);
   }
 
@@ -271,19 +280,27 @@
   function renderStep2(root) {
     root.innerHTML = "";
     const wrap = el(`<div class="bk"></div>`);
-    wrap.appendChild(el(`<div class="bk-progress"><span class="done">1 · Consulenza</span><span class="on">2 · Data e ora</span><span>3 · Dati</span></div>`));
+    wrap.appendChild(el(CFG.fixedService
+      ? `<div class="bk-progress"><span class="on">1 · Data e ora</span><span>2 · Dati</span></div>`
+      : `<div class="bk-progress"><span class="done">1 · Consulenza</span><span class="on">2 · Data e ora</span><span>3 · Dati</span></div>`));
 
     const head = el(`<div class="bk-head">
-        <button class="bk-back" type="button">← Consulenza</button>
+        ${CFG.fixedService ? "" : '<button class="bk-back" type="button">← Consulenza</button>'}
         <div class="bk-chosen">${state.service.name}</div>
       </div>`);
-    head.querySelector(".bk-back").addEventListener("click", () => renderStep1(root));
+    const backBtn = head.querySelector(".bk-back");
+    if (backBtn) backBtn.addEventListener("click", () => renderStep1(root));
     wrap.appendChild(head);
 
     // mese visualizzato di default
     if (state.calY == null) {
-      const t = todayParts(CFG.timezone);
-      state.calY = t.y; state.calM = t.m;
+      if (CFG.onlyDates && CFG.onlyDates.length) {
+        const [yy, mm] = CFG.onlyDates[0].split("-").map(Number);
+        state.calY = yy; state.calM = mm;
+      } else {
+        const t = todayParts(CFG.timezone);
+        state.calY = t.y; state.calM = t.m;
+      }
     }
 
     const cols = el(`<div class="bk-cols bk-cols-cal"></div>`);
@@ -401,7 +418,9 @@
   function renderStep3(root) {
     root.innerHTML = "";
     const wrap = el(`<div class="bk"></div>`);
-    wrap.appendChild(el(`<div class="bk-progress"><span class="done">1 · Consulenza</span><span class="done">2 · Data e ora</span><span class="on">3 · Dati</span></div>`));
+    wrap.appendChild(el(CFG.fixedService
+      ? `<div class="bk-progress"><span class="done">1 · Data e ora</span><span class="on">2 · Dati</span></div>`
+      : `<div class="bk-progress"><span class="done">1 · Consulenza</span><span class="done">2 · Data e ora</span><span class="on">3 · Dati</span></div>`));
 
     const jsd = new Date(state.iso + "T00:00:00");
     const dateLabel = jsd.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
@@ -599,7 +618,7 @@
         ${waBtn}
         <button class="bk-restart" type="button">Prenota un'altra consulenza</button>
       </div>`);
-    wrap.querySelector(".bk-restart").addEventListener("click", () => { state.iso = null; state.slot = null; state.slotsCache = {}; renderStep1(root); });
+    wrap.querySelector(".bk-restart").addEventListener("click", () => { state.iso = null; state.slot = null; state.slotsCache = {}; (CFG.fixedService ? renderStep2 : renderStep1)(root); });
     root.appendChild(wrap);
     // Nel fallback WhatsApp apre la chat automaticamente; nel flusso gestionale no.
     if (mode !== "supabase") { try { window.open(wa, "_blank", "noopener"); } catch (e) {} }

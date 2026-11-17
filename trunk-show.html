@@ -165,19 +165,13 @@
     </div>
   </section>
 
-  <!-- ===== PRENOTAZIONE EVENTO ===== -->
+  <!-- ===== PRENOTAZIONE EVENTO (gestionale, come le consulenze normali) ===== -->
   <section class="ts-book" id="prenota">
     <h2>Prenota la tua prova</h2>
-    <p>Scegli il giorno che preferisci: ti ricontatteremo per confermare l'orario della tua consulenza dedicata.</p>
-    <div class="ts-days" id="days">
-      <button class="ts-day sel" type="button" data-g="giovedì 3 dicembre"><strong>03</strong><small>Giovedì</small></button>
-      <button class="ts-day" type="button" data-g="venerdì 4 dicembre"><strong>04</strong><small>Venerdì</small></button>
-      <button class="ts-day" type="button" data-g="sabato 5 dicembre"><strong>05</strong><small>Sabato</small></button>
+    <p>Scegli giorno e orario tra le tre giornate dell'evento: la disponibilità è in tempo reale. Riceverai conferma dall'atelier.</p>
+    <div class="bk-shell">
+      <div id="booking-app"></div>
     </div>
-    <a class="ts-wa" id="waBtn" href="#" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm4.52 11.99c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.76-1.85-.2-.48-.41-.42-.56-.43l-.48-.01c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>
-      Prenota su WhatsApp
-    </a>
     <div class="ts-alt">Preferisci chiamarci? <a href="tel:+390813088193">0813088193</a></div>
   </section>
 </main>
@@ -256,21 +250,18 @@
     set("cd",d); set("ch",pad(h)); set("cm",pad(m)); set("cs",pad(s));
   }
   tick(); setInterval(tick,1000);
-
-  // --- Scelta giorno + messaggio WhatsApp ---
-  var NUM="393516232607", sel="giovedì 3 dicembre";
-  var waBtn=document.getElementById("waBtn"), days=document.getElementById("days");
-  function updateWa(){
-    var msg="Buongiorno, vorrei prenotare la mia prova al Trunk Show Eva Lendel presso l'Atelier Amirante per "+sel+". Resto in attesa di conferma per l'orario. Grazie!";
-    waBtn.href="https://wa.me/"+NUM+"?text="+encodeURIComponent(msg);
-  }
-  updateWa();
-  if (days) days.addEventListener("click", function(e){
-    var b=e.target.closest(".ts-day"); if(!b) return;
-    days.querySelectorAll(".ts-day").forEach(function(x){x.classList.remove("sel");});
-    b.classList.add("sel"); sel=b.getAttribute("data-g"); updateWa();
-  });
 })();
 </script>
+
+<!-- Motore di prenotazione (gestionale Scintilla), limitato ai giorni dell'evento -->
+<script src="js/data.js?v=20"></script>
+<script>
+  // Sulla pagina evento: consulenza fissa "sposa" e sole date del Trunk Show.
+  if (window.DATA && window.DATA.booking) {
+    window.DATA.booking.fixedService = "sposa";
+    window.DATA.booking.onlyDates = ["2026-12-03", "2026-12-04", "2026-12-05"];
+  }
+</script>
+<script src="js/booking.min.js?v=20" defer></script>
 </body>
 </html>
