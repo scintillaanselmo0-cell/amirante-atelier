@@ -231,10 +231,23 @@
         apiAttached = true;
         new YT.Player("reyaFrame", {
           events: {
-            onReady: function(e){ try { e.target.mute(); e.target.playVideo(); } catch(_){} },
+            onReady: function(e){
+              var pl = e.target;
+              try { pl.mute(); pl.playVideo(); } catch(_){}
+              // Loop continuo: facciamo il seek a 0 POCO PRIMA della fine, cosi'
+              // il player non raggiunge mai lo stato "finito" e l'icona replay
+              // di YouTube non compare mai al riavvio.
+              var dur = 0;
+              setInterval(function(){
+                try {
+                  if (!dur) dur = pl.getDuration() || 0;
+                  if (dur) { var t = pl.getCurrentTime(); if (t >= dur - 0.4) { pl.seekTo(0, true); } }
+                } catch(_){}
+              }, 200);
+            },
             onStateChange: function(e){
               if (e.data === YT.PlayerState.PLAYING) reveal();
-              // loop continuo: a fine video torna a 0 e riparte, senza ricarica
+              // rete di sicurezza: se mai raggiunge la fine, riparte subito
               if (e.data === YT.PlayerState.ENDED) { try { e.target.seekTo(0, true); e.target.playVideo(); } catch(_){} }
             }
           }
