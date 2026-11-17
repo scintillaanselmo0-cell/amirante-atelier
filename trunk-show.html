@@ -18,15 +18,37 @@
   .reveal{opacity:1!important;transform:none!important}
   body{background:var(--paper)}
   a{color:inherit}
-  /* ===== HERO scuro ===== */
-  .ts-hero{position:relative;background:#12100E;color:#f3ece0;text-align:center;overflow:hidden;
-    padding:clamp(54px,10vw,96px) 22px clamp(46px,8vw,78px)}
-  .ts-hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;
-    filter:brightness(.72) saturate(1.05) blur(1.2px);transform:scale(1.07)}
-  .ts-hero::before{content:"";position:absolute;inset:0;z-index:1;
-    background:radial-gradient(120% 70% at 50% -10%,rgba(201,162,75,.18),transparent 55%),
-      linear-gradient(180deg,rgba(18,16,14,.72),rgba(18,16,14,.9))}
-  .ts-hero > *{position:relative;z-index:2}
+  /* ===== HERO: split su desktop (pannello + video), full-bleed su mobile ===== */
+  .ts-hero{position:relative;display:flex;min-height:88vh;background:#12100E;color:#f3ece0;overflow:hidden}
+  .ts-hero-content{position:relative;z-index:3;flex:0 0 46%;max-width:46%;box-sizing:border-box;
+    display:flex;flex-direction:column;justify-content:center;text-align:left;background:#12100E;
+    padding:clamp(40px,6vw,84px) clamp(26px,4vw,64px)}
+  .ts-hero-content > *{position:relative;z-index:1}
+  .ts-hero-media{position:relative;flex:1 1 auto;overflow:hidden;background:#0d0b0a}
+  .ts-hero-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;z-index:0;
+    -webkit-user-select:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
+  .ts-yt{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
+  .ts-yt iframe{position:absolute;top:50%;left:50%;width:118%;height:178%;transform:translate(-50%,-50%);border:0}
+  .ts-hero-media::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+    background:linear-gradient(90deg,#12100E 0,rgba(18,16,14,.45) 12%,rgba(18,16,14,0) 34%),
+      linear-gradient(180deg,rgba(12,10,8,.2),rgba(12,10,8,.3))}
+  .ts-hero-content .ts-logo{margin:0 0 24px}
+  .ts-hero-content .ts-dates{justify-content:flex-start}
+  .ts-hero-content .ts-count{justify-content:flex-start}
+  .ts-hero-cta{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:32px}
+  .ts-hero-cta .btn-gold{margin-top:0}
+  .ts-link{font-family:var(--sans);font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;
+    color:#f3ece0;border-bottom:1px solid rgba(201,162,75,.6);padding-bottom:4px;transition:.3s var(--ease)}
+  .ts-link:hover{color:#C9A24B;border-color:#C9A24B}
+  @media(max-width:900px){
+    .ts-hero{display:block;min-height:92svh}
+    .ts-hero-media{position:absolute;inset:0;z-index:0}
+    .ts-hero-content{position:relative;z-index:3;flex:none;max-width:100%;width:100%;min-height:92svh;
+      background:transparent;justify-content:flex-end;padding:clamp(28px,8vw,56px) 22px clamp(40px,11vw,66px)}
+    .ts-hero-media::after{background:linear-gradient(180deg,rgba(12,10,8,.08) 0,rgba(12,10,8,.14) 36%,rgba(12,10,8,.55) 66%,rgba(12,10,8,.9) 100%)}
+    .ts-hero-content .ts-count{display:none}
+    .ts-hero-content .ts-logo{height:34px;margin:0 0 18px}
+  }
   .ts-logo{height:clamp(38px,5vw,56px);width:auto;margin:0 auto 26px;display:block;filter:drop-shadow(0 6px 20px rgba(0,0,0,.4))}
   .ts-eyebrow{font-family:var(--sans);font-weight:400;font-size:.74rem;letter-spacing:.32em;text-transform:uppercase;color:#C9A24B;margin-bottom:14px}
   .ts-title{font-family:var(--serif);font-weight:400;font-style:italic;font-size:clamp(3rem,10vw,6rem);line-height:.98;margin:0}
@@ -93,26 +115,32 @@
 
 <!-- ===== HERO ===== -->
 <header class="ts-hero">
-  <video class="ts-hero-vid" autoplay muted loop playsinline preload="metadata" poster="assets/trunk-poster.jpg?v=19" aria-hidden="true" tabindex="-1">
-    <source src="assets/trunk-video.mp4?v=19" type="video/mp4">
-  </video>
-  <a href="index.html" aria-label="Atelier Amirante"><img class="ts-logo" src="assets/logo-light.webp" alt="Atelier Amirante — Meg Shop"></a>
-  <div class="ts-eyebrow">Trunk Show · Evento esclusivo</div>
-  <h1 class="ts-title">Eva Lendel</h1>
-  <div class="ts-sub">in anteprima all'Atelier Amirante</div>
-  <div class="ts-dates">
-    <span class="d">03<small>Gio</small></span><span class="sep"></span>
-    <span class="d">04<small>Ven</small></span><span class="sep"></span>
-    <span class="d">05<small>Sab</small></span>
+  <div class="ts-hero-media">
+    <img class="ts-hero-poster" src="https://evalendel.com/wp-content/uploads/2026/08/eva-lendel-venus-reya-0.jpg" alt="Abito da sposa Eva Lendel — Reya, Venus Collection" referrerpolicy="no-referrer" draggable="false" loading="eager">
+    <div class="ts-yt" id="ytReya"></div>
   </div>
-  <div class="ts-place">Dicembre 2026 · Villaricca (NA)</div>
-  <div class="ts-count" id="count" aria-label="Conto alla rovescia">
-    <div class="c"><div class="n" id="cd">—</div><div class="l">Giorni</div></div>
-    <div class="c"><div class="n" id="ch">—</div><div class="l">Ore</div></div>
-    <div class="c"><div class="n" id="cm">—</div><div class="l">Min</div></div>
-    <div class="c"><div class="n" id="cs">—</div><div class="l">Sec</div></div>
+  <div class="ts-hero-content">
+    <a href="index.html" aria-label="Atelier Amirante"><img class="ts-logo" src="assets/logo-light.webp" alt="Atelier Amirante — Meg Shop"></a>
+    <div class="ts-eyebrow">Trunk Show · Evento esclusivo</div>
+    <h1 class="ts-title">Eva Lendel</h1>
+    <div class="ts-sub">in anteprima all'Atelier Amirante</div>
+    <div class="ts-dates">
+      <span class="d">03<small>Gio</small></span><span class="sep"></span>
+      <span class="d">04<small>Ven</small></span><span class="sep"></span>
+      <span class="d">05<small>Sab</small></span>
+    </div>
+    <div class="ts-place">Dicembre 2026 · Villaricca (NA)</div>
+    <div class="ts-count" id="count" aria-label="Conto alla rovescia">
+      <div class="c"><div class="n" id="cd">—</div><div class="l">Giorni</div></div>
+      <div class="c"><div class="n" id="ch">—</div><div class="l">Ore</div></div>
+      <div class="c"><div class="n" id="cm">—</div><div class="l">Min</div></div>
+      <div class="c"><div class="n" id="cs">—</div><div class="l">Sec</div></div>
+    </div>
+    <div class="ts-hero-cta">
+      <a href="#prenota" class="btn btn-gold">Prenota la tua prova</a>
+      <a href="#abiti" class="ts-link">Guarda gli abiti ↓</a>
+    </div>
   </div>
-  <a href="#prenota" class="btn btn-gold">Prenota la tua prova</a>
 </header>
 
 <!-- ===== INTRO / PRESENTAZIONE ===== -->
@@ -126,7 +154,7 @@
     </div>
 
     <!-- GALLERIA ABITI EVA LENDEL -->
-    <div class="ts-gallery">
+    <div class="ts-gallery" id="abiti">
       <div class="ts-grid" id="dressGrid"></div>
     </div>
 
@@ -165,6 +193,28 @@
 <script>
 (function(){
   "use strict";
+  // --- Video di sfondo hero: YouTube (abito Reya, Venus Collection) ---
+  // L'URL dell'embed usa location.origin, cosi' funziona su amiranteatelier.it
+  // e sul dominio github.io. L'iframe e' sovradimensionato via CSS per
+  // ritagliare le sovrimpressioni "Shorts" di YouTube e mostrare solo il video.
+  (function(){
+    var box = document.getElementById("ytReya");
+    if (!box) return;
+    var id = "eL24bosVcyQ";
+    var p = "autoplay=1&mute=1&controls=0&showinfo=0&rel=0&playsinline=1&modestbranding=1" +
+            "&iv_load_policy=3&disablekb=1&fs=0&loop=1&playlist=" + id +
+            "&enablejsapi=1&origin=" + encodeURIComponent(location.origin);
+    var f = document.createElement("iframe");
+    f.src = "https://www.youtube-nocookie.com/embed/" + id + "?" + p;
+    f.title = "Video abito Eva Lendel — Reya";
+    f.setAttribute("allow", "autoplay; encrypted-media; picture-in-picture");
+    f.setAttribute("frameborder", "0");
+    f.setAttribute("tabindex", "-1");
+    f.setAttribute("aria-hidden", "true");
+    f.loading = "eager";
+    box.appendChild(f);
+  })();
+
   // --- Galleria abiti Eva Lendel (immagini ufficiali Eva Lendel) ---
   var DRESSES = [
     ["Baccara","https://evalendel.com/wp-content/uploads/2026/08/eva-lendel-less-is-more-iv-baccara-0-1000x1500.jpg"],
