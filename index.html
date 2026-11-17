@@ -169,6 +169,16 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offse
   ]
 }
 </script>
+<style>
+.nav-trunk{color:var(--gold)!important}
+.promo-trunk{background:#12100E;color:#f3ece0;text-align:center;padding:clamp(44px,7vw,74px) 22px;position:relative;overflow:hidden}
+.promo-trunk::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 0,rgba(201,162,75,.16),transparent 60%)}
+.promo-trunk>*{position:relative;z-index:1}
+.promo-trunk .pe{font-family:var(--sans);font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:#C9A24B;margin-bottom:12px}
+.promo-trunk h2{font-family:var(--serif);font-weight:400;font-style:italic;font-size:clamp(2rem,6vw,3.4rem);margin:0 0 .3em;color:#fff;line-height:1.02}
+.promo-trunk .pd{font-family:var(--sans);font-weight:300;font-size:clamp(.9rem,2vw,1.05rem);letter-spacing:.05em;color:rgba(243,236,224,.82);margin:0 auto 1.7em;max-width:560px}
+.promo-trunk .pd b{color:#C9A24B;font-weight:400}
+</style>
 </head>
 <body>
 
@@ -185,6 +195,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offse
       <a href="#prenota">Consulenze</a>
       <a href="#galleria">Collezione</a>
       <a href="#contatti">Contatti</a>
+      <a href="trunk-show.html" class="nav-trunk">Trunk Show</a>
       <a href="#prenota" class="nav-cta">Prenota</a>
     </nav>
     <button class="nav-burger" id="navBurger" aria-label="Apri il menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
@@ -207,6 +218,14 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offse
       <a href="#prenota" class="btn btn-ghost-light">Prenota un appuntamento</a>
     </div>
     <div class="hero-scroll" aria-hidden="true">Scopri</div>
+  </section>
+
+  <!-- BANDA TRUNK SHOW -->
+  <section class="promo-trunk" aria-label="Trunk Show Eva Lendel">
+    <div class="pe">Evento esclusivo · Su appuntamento</div>
+    <h2>Trunk Show Eva Lendel</h2>
+    <div class="pd"><b>3 · 4 · 5 Dicembre 2026</b> — gli abiti da sposa Eva Lendel in anteprima all'Atelier Amirante di Villaricca.</div>
+    <a href="trunk-show.html" class="btn btn-gold">Scopri l'evento →</a>
   </section>
 
   <!-- FILOSOFIA -->

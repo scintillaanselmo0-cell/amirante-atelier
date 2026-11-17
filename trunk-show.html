@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trunk Show Eva Lendel · 3-4-5 Dicembre — Atelier Amirante</title>
+<meta name="description" content="Evento esclusivo all'Atelier Amirante di Villaricca (NA): il 3, 4 e 5 dicembre la collezione di abiti da sposa Eva Lendel in anteprima, solo su appuntamento. Prenota la tua prova.">
+<meta name="theme-color" content="#12100E">
+<meta property="og:title" content="Trunk Show Eva Lendel · 3-4-5 Dicembre — Atelier Amirante">
+<meta property="og:description" content="Gli abiti da sposa Eva Lendel in anteprima a Villaricca (NA). Solo su appuntamento.">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.min.css?v=19">
+<style>
+  .reveal{opacity:1!important;transform:none!important}
+  body{background:var(--paper)}
+  a{color:inherit}
+  /* ===== HERO scuro ===== */
+  .ts-hero{position:relative;background:#12100E;color:#f3ece0;text-align:center;overflow:hidden;
+    padding:clamp(54px,10vw,96px) 22px clamp(46px,8vw,78px)}
+  .ts-hero::before{content:"";position:absolute;inset:0;z-index:0;opacity:.9;
+    background:radial-gradient(120% 70% at 50% -10%,rgba(201,162,75,.18),transparent 60%)}
+  .ts-hero > *{position:relative;z-index:1}
+  .ts-logo{height:clamp(38px,5vw,56px);width:auto;margin:0 auto 26px;display:block;filter:drop-shadow(0 6px 20px rgba(0,0,0,.4))}
+  .ts-eyebrow{font-family:var(--sans);font-weight:400;font-size:.74rem;letter-spacing:.32em;text-transform:uppercase;color:#C9A24B;margin-bottom:14px}
+  .ts-title{font-family:var(--serif);font-weight:400;font-style:italic;font-size:clamp(3rem,10vw,6rem);line-height:.98;margin:0}
+  .ts-sub{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.6rem);letter-spacing:.02em;margin-top:6px;color:#e7dcc8}
+  .ts-dates{display:flex;align-items:center;justify-content:center;gap:clamp(14px,4vw,30px);margin:30px 0 8px;flex-wrap:wrap}
+  .ts-dates .d{font-family:var(--serif);font-size:clamp(2rem,6vw,3.1rem);line-height:1;color:#fff}
+  .ts-dates .d small{display:block;font-family:var(--sans);font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:#C9A24B;margin-top:8px}
+  .ts-dates .sep{width:6px;height:6px;transform:rotate(45deg);background:#C9A24B;flex:0 0 auto}
+  .ts-place{font-family:var(--sans);font-size:.84rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(243,236,224,.7);margin-top:12px}
+  /* countdown */
+  .ts-count{display:flex;justify-content:center;gap:14px;margin:30px 0 8px;flex-wrap:wrap}
+  .ts-count .c{min-width:66px}
+  .ts-count .n{font-family:var(--serif);font-size:clamp(1.8rem,5vw,2.6rem);line-height:1;color:#fff}
+  .ts-count .l{font-family:var(--sans);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(243,236,224,.55);margin-top:6px}
+  .ts-hero .btn-gold{margin-top:30px}
+  /* ===== SEZIONI chiare ===== */
+  .ts-wrap{max-width:var(--maxw);margin:0 auto;padding:clamp(48px,8vw,96px) clamp(20px,5vw,48px)}
+  .ts-intro{max-width:720px;margin:0 auto;text-align:center}
+  .ts-kicker{display:block;font-family:var(--sans);font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+  .ts-intro h2{font-family:var(--serif);font-weight:400;font-style:italic;font-size:clamp(2rem,5vw,3rem);color:var(--ink);margin:0 0 .6em;line-height:1.05}
+  .ts-intro p{font-family:var(--sans);font-weight:300;font-size:1.05rem;line-height:1.8;color:var(--ink-soft);margin:0 0 1em}
+  /* galleria abiti */
+  .ts-gallery{margin-top:clamp(40px,6vw,64px)}
+  .ts-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .ts-card{display:flex;flex-direction:column;gap:10px}
+  .ts-ph{position:relative;aspect-ratio:2/3;overflow:hidden;background:var(--ivory);border:1px solid var(--line)}
+  .ts-ph img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;
+    -webkit-user-select:none;user-select:none;-webkit-user-drag:none;-webkit-touch-callout:none;
+    filter:grayscale(.1) contrast(1.02)}
+  .ts-name{text-align:center;font-family:var(--serif);font-size:1.15rem;color:var(--ink);letter-spacing:.02em}
+  .ts-name small{display:block;font-family:var(--sans);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-top:2px}
+  @media(max-width:900px){.ts-grid{grid-template-columns:repeat(3,1fr);gap:12px}}
+  @media(max-width:600px){.ts-grid{grid-template-columns:repeat(2,1fr);gap:10px}}
+  /* info su appuntamento */
+  .ts-note{max-width:620px;margin:clamp(40px,6vw,64px) auto 0;text-align:center;
+    background:var(--ivory);border:1px solid var(--line);border-radius:14px;padding:26px 24px}
+  .ts-note strong{font-family:var(--serif);font-weight:600;font-size:1.3rem;color:var(--ink);display:block;margin-bottom:6px}
+  .ts-note p{font-family:var(--sans);font-weight:300;font-size:.95rem;color:var(--ink-soft);margin:0}
+  /* prenotazione evento */
+  .ts-book{background:var(--ink);color:#f3ece0;text-align:center;padding:clamp(48px,8vw,90px) 22px}
+  .ts-book h2{font-family:var(--serif);font-weight:400;font-style:italic;font-size:clamp(2rem,5vw,3rem);margin:0 0 .4em}
+  .ts-book p{font-family:var(--sans);font-weight:300;font-size:1rem;color:rgba(243,236,224,.75);max-width:520px;margin:0 auto 1.6em}
+  .ts-days{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:26px}
+  .ts-day{font-family:var(--sans);cursor:pointer;background:transparent;color:#f3ece0;
+    border:1px solid rgba(201,162,75,.45);border-radius:12px;padding:14px 20px;min-width:118px;transition:.3s var(--ease)}
+  .ts-day strong{display:block;font-family:var(--serif);font-size:1.5rem;font-weight:600;line-height:1}
+  .ts-day small{display:block;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:#C9A24B;margin-top:6px}
+  .ts-day.sel,.ts-day:hover{background:rgba(201,162,75,.16);border-color:#C9A24B}
+  .ts-wa{display:inline-flex;align-items:center;gap:10px;font-family:var(--sans);font-size:.82rem;letter-spacing:.14em;
+    text-transform:uppercase;background:linear-gradient(160deg,var(--gold),#C9A24B);color:#fff;text-decoration:none;
+    padding:1em 2em;border-radius:40px;border:0;cursor:pointer}
+  .ts-wa svg{width:20px;height:20px}
+  .ts-alt{font-size:.82rem;color:rgba(243,236,224,.7);margin-top:18px}
+  .ts-alt a{color:#C9A24B;text-decoration:none}
+  /* footer legale */
+  .lg-foot{text-align:center;padding:30px 22px 44px;border-top:1px solid var(--line);background:var(--paper)}
+  .lg-foot .fn{font-family:var(--serif);font-size:1rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  .lg-foot .fl{font-family:var(--sans);font-size:.72rem;line-height:1.7;color:var(--ink-soft);margin-top:8px}
+  .lg-foot a{color:var(--gold);text-decoration:none}
+  .lg-foot .dot{color:var(--gold);margin:0 .4em}
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<header class="ts-hero">
+  <a href="index.html" aria-label="Atelier Amirante"><img class="ts-logo" src="assets/logo-light.webp" alt="Atelier Amirante — Meg Shop"></a>
+  <div class="ts-eyebrow">Trunk Show · Evento esclusivo</div>
+  <h1 class="ts-title">Eva Lendel</h1>
+  <div class="ts-sub">in anteprima all'Atelier Amirante</div>
+  <div class="ts-dates">
+    <span class="d">03<small>Gio</small></span><span class="sep"></span>
+    <span class="d">04<small>Ven</small></span><span class="sep"></span>
+    <span class="d">05<small>Sab</small></span>
+  </div>
+  <div class="ts-place">Dicembre 2026 · Villaricca (NA)</div>
+  <div class="ts-count" id="count" aria-label="Conto alla rovescia">
+    <div class="c"><div class="n" id="cd">—</div><div class="l">Giorni</div></div>
+    <div class="c"><div class="n" id="ch">—</div><div class="l">Ore</div></div>
+    <div class="c"><div class="n" id="cm">—</div><div class="l">Min</div></div>
+    <div class="c"><div class="n" id="cs">—</div><div class="l">Sec</div></div>
+  </div>
+  <a href="#prenota" class="btn btn-gold">Prenota la tua prova</a>
+</header>
+
+<!-- ===== INTRO / PRESENTAZIONE ===== -->
+<main>
+  <section class="ts-wrap">
+    <div class="ts-intro">
+      <span class="ts-kicker">Per tre giorni soltanto</span>
+      <h2>Tre giorni dedicati alla sposa</h2>
+      <p>Per la prima volta all'Atelier Amirante, la collezione di abiti da sposa <strong>Eva Lendel</strong> arriva in anteprima a Villaricca. Tre giornate speciali in cui provare, toccare e scegliere tra le creazioni di una delle firme più amate del bridal contemporaneo.</p>
+      <p>Linee minimaliste, tessuti fluidi e abiti trasformabili: la visione di Eva Lendel incontra la cura sartoriale del nostro atelier, per accompagnarti verso l'abito del giorno più importante.</p>
+    </div>
+
+    <!-- GALLERIA ABITI EVA LENDEL -->
+    <div class="ts-gallery">
+      <div class="ts-grid" id="dressGrid"></div>
+    </div>
+
+    <div class="ts-note">
+      <strong>Solo su appuntamento</strong>
+      <p>I posti sono limitati e riservati: prenota la tua prova in uno dei tre giorni dell'evento per vivere una consulenza dedicata, senza attese.</p>
+    </div>
+  </section>
+
+  <!-- ===== PRENOTAZIONE EVENTO ===== -->
+  <section class="ts-book" id="prenota">
+    <h2>Prenota la tua prova</h2>
+    <p>Scegli il giorno che preferisci: ti ricontatteremo per confermare l'orario della tua consulenza dedicata.</p>
+    <div class="ts-days" id="days">
+      <button class="ts-day sel" type="button" data-g="giovedì 3 dicembre"><strong>03</strong><small>Giovedì</small></button>
+      <button class="ts-day" type="button" data-g="venerdì 4 dicembre"><strong>04</strong><small>Venerdì</small></button>
+      <button class="ts-day" type="button" data-g="sabato 5 dicembre"><strong>05</strong><small>Sabato</small></button>
+    </div>
+    <a class="ts-wa" id="waBtn" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm4.52 11.99c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.35-.76-1.85-.2-.48-.41-.42-.56-.43l-.48-.01c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>
+      Prenota su WhatsApp
+    </a>
+    <div class="ts-alt">Preferisci chiamarci? <a href="tel:+390813088193">0813088193</a></div>
+  </section>
+</main>
+
+<footer class="lg-foot">
+  <div class="fn">Atelier Amirante <span class="dot">◆</span> Meg Shop</div>
+  <div class="fl">
+    Via della Libertà 1174, Villaricca (NA) · <a href="tel:+390818186855">081 818 6855</a><br>
+    Mega Eleganza S.r.l. · P.IVA / C.F. 08367001214 · Sede legale: Via Aniello Palumbo 58, 80014 Giugliano in Campania (NA)<br>
+    Capitale sociale € 10.000,00 · Rappresentante legale: Emilio Amirante · PEC: <a href="mailto:megaeleganzasrl@cgn.legalmail.it">megaeleganzasrl@cgn.legalmail.it</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  // --- Galleria abiti Eva Lendel (immagini ufficiali Eva Lendel) ---
+  var DRESSES = [
+    ["Baccara","https://evalendel.com/wp-content/uploads/2026/08/eva-lendel-less-is-more-iv-baccara-0-1000x1500.jpg"],
+    ["Alegra","https://evalendel.com/wp-content/uploads/2026/08/eva-lendel-endless-styles-alegra-0-1000x1500.jpg"],
+    ["Lika","https://evalendel.com/wp-content/uploads/2026/08/eva-lendel-less-is-more-ii-lika-0-1000x1500.jpg"],
+    ["Jess","https://evalendel.com/wp-content/uploads/2026/08/eva-lendel-endless-styles-jess-0-1000x1500.jpg"],
+    ["Aimee","https://evalendel.com/wp-content/uploads/2026/08/eva-lendel-less-is-more-v-aimee-0-683x1024.jpg"],
+    ["Milos","https://evalendel.com/wp-content/uploads/2026/08/eva-lendel-venus-milos-0-683x1024.jpg"],
+    ["Arlet","https://evalendel.com/wp-content/uploads/2026/08/eva-lendel-venus-arlet-0-683x1024.jpg"],
+    ["Chabli","https://evalendel.com/wp-content/uploads/2026/08/eva-lendel-venus-chabli-0-683x1024.jpg"],
+    ["Sargas","https://evalendel.com/wp-content/uploads/2026/08/eva-lendel-sirenity-sargas-0-683x1024.jpg"]
+  ];
+  var grid = document.getElementById("dressGrid");
+  if (grid) grid.innerHTML = DRESSES.map(function(d){
+    return '<div class="ts-card"><div class="ts-ph">' +
+      '<img src="'+d[1]+'" alt="Abito da sposa Eva Lendel '+d[0]+'" loading="lazy" draggable="false" referrerpolicy="no-referrer" onerror="this.closest(\'.ts-ph\').style.display=\'none\'">' +
+      '</div><div class="ts-name">'+d[0]+'<small>Eva Lendel</small></div></div>';
+  }).join("");
+
+  // --- Conto alla rovescia all'inizio dell'evento (3 dicembre 2026, 09:00) ---
+  var target = new Date("2026-12-03T09:00:00+01:00").getTime();
+  function pad(n){ return (n<10?"0":"")+n; }
+  function tick(){
+    var diff = target - Date.now();
+    if (diff < 0) diff = 0;
+    var d = Math.floor(diff/86400000), h = Math.floor(diff%86400000/3600000),
+        m = Math.floor(diff%3600000/60000), s = Math.floor(diff%60000/1000);
+    var set=function(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; };
+    set("cd",d); set("ch",pad(h)); set("cm",pad(m)); set("cs",pad(s));
+  }
+  tick(); setInterval(tick,1000);
+
+  // --- Scelta giorno + messaggio WhatsApp ---
+  var NUM="393516232607", sel="giovedì 3 dicembre";
+  var waBtn=document.getElementById("waBtn"), days=document.getElementById("days");
+  function updateWa(){
+    var msg="Buongiorno, vorrei prenotare la mia prova al Trunk Show Eva Lendel presso l'Atelier Amirante per "+sel+". Resto in attesa di conferma per l'orario. Grazie!";
+    waBtn.href="https://wa.me/"+NUM+"?text="+encodeURIComponent(msg);
+  }
+  updateWa();
+  if (days) days.addEventListener("click", function(e){
+    var b=e.target.closest(".ts-day"); if(!b) return;
+    days.querySelectorAll(".ts-day").forEach(function(x){x.classList.remove("sel");});
+    b.classList.add("sel"); sel=b.getAttribute("data-g"); updateWa();
+  });
+})();
+</script>
+</body>
+</html>
