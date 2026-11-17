@@ -69,17 +69,34 @@
   .ts-intro h2{font-family:var(--serif);font-weight:400;font-style:italic;font-size:clamp(2rem,5vw,3rem);color:var(--ink);margin:0 0 .6em;line-height:1.05}
   .ts-intro p{font-family:var(--sans);font-weight:300;font-size:1.05rem;line-height:1.8;color:var(--ink-soft);margin:0 0 1em}
   /* galleria abiti */
-  .ts-gallery{margin-top:clamp(40px,6vw,64px)}
-  .ts-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-  .ts-card{display:flex;flex-direction:column;gap:10px}
-  .ts-ph{position:relative;aspect-ratio:2/3;overflow:hidden;background:var(--ivory);border:1px solid var(--line)}
-  .ts-ph img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;
-    -webkit-user-select:none;user-select:none;-webkit-user-drag:none;-webkit-touch-callout:none;
-    filter:grayscale(.1) contrast(1.02)}
-  .ts-name{text-align:center;font-family:var(--serif);font-size:1.15rem;color:var(--ink);letter-spacing:.02em}
-  .ts-name small{display:block;font-family:var(--sans);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-top:2px}
-  @media(max-width:900px){.ts-grid{grid-template-columns:repeat(3,1fr);gap:12px}}
-  @media(max-width:600px){.ts-grid{grid-template-columns:repeat(2,1fr);gap:10px}}
+  .ts-gallery{margin-top:clamp(28px,4vw,52px)}
+  /* carosello orizzontale: scorre da solo, trascinabile, con lightbox */
+  .ts-marquee{position:relative;overflow:hidden;width:100%;cursor:grab;touch-action:pan-y;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+  .ts-marquee.dragging{cursor:grabbing}
+  .ts-mq-track{display:flex;width:max-content;will-change:transform}
+  .ts-mq-card{flex:0 0 auto;width:clamp(210px,24vw,290px);margin-right:16px;-webkit-user-select:none;user-select:none}
+  .ts-mq-ph{position:relative;aspect-ratio:2/3;overflow:hidden;background:var(--ivory);border:1px solid var(--line);cursor:pointer}
+  .ts-mq-ph img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;
+    -webkit-user-drag:none;-webkit-touch-callout:none;filter:grayscale(.1) contrast(1.02)}
+  .ts-mq-name{text-align:center;font-family:var(--serif);font-size:1.1rem;color:var(--ink);letter-spacing:.02em;margin-top:10px}
+  .ts-mq-name small{display:block;font-family:var(--sans);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-top:2px}
+  @media(max-width:600px){.ts-mq-card{width:62vw;margin-right:12px}}
+  /* lightbox abito */
+  .ts-lb{position:fixed;inset:0;z-index:300;background:rgba(12,10,8,.95);display:none;
+    align-items:center;justify-content:center;opacity:0;transition:opacity .35s ease}
+  .ts-lb.on{display:flex;opacity:1}
+  .ts-lb-img{max-width:88vw;max-height:84vh;object-fit:contain;box-shadow:0 40px 120px rgba(0,0,0,.6)}
+  .ts-lb-cap{position:absolute;left:0;right:0;bottom:24px;text-align:center;color:#f3ece0;
+    font-family:var(--serif);font-size:1.3rem;letter-spacing:.04em;pointer-events:none}
+  .ts-lb-cap small{display:block;font-family:var(--sans);font-size:.64rem;letter-spacing:.24em;text-transform:uppercase;color:#C9A24B;margin-top:4px}
+  .ts-lb-close{position:absolute;top:20px;right:26px;background:0 0;border:0;color:#fff;font-size:2rem;cursor:pointer;opacity:.8;line-height:1}
+  .ts-lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:0 0;border:0;color:#fff;
+    font-family:var(--serif);font-size:2.6rem;cursor:pointer;opacity:.75;padding:16px 20px;line-height:1}
+  .ts-lb-prev{left:6px}.ts-lb-next{right:6px}
+  .ts-lb-close:hover,.ts-lb-nav:hover{opacity:1}
+  @media(prefers-reduced-motion:reduce){.ts-mq-track{will-change:auto}}
   /* info su appuntamento */
   .ts-note{max-width:620px;margin:clamp(40px,6vw,64px) auto 0;text-align:center;
     background:var(--ivory);border:1px solid var(--line);border-radius:14px;padding:26px 24px}
@@ -154,7 +171,7 @@
 
     <!-- GALLERIA ABITI EVA LENDEL -->
     <div class="ts-gallery" id="abiti">
-      <div class="ts-grid" id="dressGrid"></div>
+      <div class="ts-marquee" id="dressMq"><div class="ts-mq-track" id="dressTrack"></div></div>
     </div>
 
     <div class="ts-note">
@@ -182,6 +199,15 @@
     Capitale sociale € 10.000,00 · Rappresentante legale: Emilio Amirante · PEC: <a href="mailto:megaeleganzasrl@cgn.legalmail.it">megaeleganzasrl@cgn.legalmail.it</a>
   </div>
 </footer>
+
+<!-- Lightbox galleria abiti -->
+<div class="ts-lb" id="dressLb" role="dialog" aria-modal="true" aria-label="Abito" aria-hidden="true">
+  <button class="ts-lb-close" id="lbClose" type="button" aria-label="Chiudi">✕</button>
+  <button class="ts-lb-nav ts-lb-prev" id="lbPrev" type="button" aria-label="Precedente">‹</button>
+  <img class="ts-lb-img" id="lbImg" src="" alt="" referrerpolicy="no-referrer" draggable="false">
+  <button class="ts-lb-nav ts-lb-next" id="lbNext" type="button" aria-label="Successivo">›</button>
+  <div class="ts-lb-cap" id="lbCap"></div>
+</div>
 
 <script>
 (function(){
@@ -228,12 +254,94 @@
     ["Moonlit","https://evalendel.com/wp-content/uploads/2026/08/eva-lendel-sirenity-moonlite-0-683x1024.jpg"],
     ["Dallas","https://evalendel.com/wp-content/uploads/2026/08/eva-lendel-less-is-more-iv-dallas-0-731x1024.jpg"]
   ];
-  var grid = document.getElementById("dressGrid");
-  if (grid) grid.innerHTML = DRESSES.map(function(d){
-    return '<div class="ts-card"><div class="ts-ph">' +
-      '<img src="'+d[1]+'" alt="Abito da sposa Eva Lendel '+d[0]+'" loading="lazy" draggable="false" referrerpolicy="no-referrer" onerror="this.closest(\'.ts-ph\').style.display=\'none\'">' +
-      '</div><div class="ts-name">'+d[0]+'<small>Eva Lendel</small></div></div>';
-  }).join("");
+  // --- Galleria: carosello orizzontale auto-scroll + trascinabile + lightbox ---
+  (function(){
+    var mq = document.getElementById("dressMq");
+    var track = document.getElementById("dressTrack");
+    if (!mq || !track) return;
+
+    function card(d, i){
+      return '<div class="ts-mq-card" data-i="'+i+'">'
+        + '<div class="ts-mq-ph"><img src="'+d[1]+'" alt="Abito da sposa Eva Lendel '+d[0]+'"'
+        + ' loading="lazy" draggable="false" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'"></div>'
+        + '<div class="ts-mq-name">'+d[0]+'<small>Eva Lendel</small></div></div>';
+    }
+    // Due copie identiche in fila per un loop senza stacco.
+    var html = DRESSES.map(card).join("");
+    track.innerHTML = html + html;
+
+    var offset = 0, half = 0, speed = 0.45, paused = false, dragging = false;
+    // Larghezza di UNA copia = n. abiti × (larghezza card + margine): deterministica,
+    // indipendente da scrollWidth e dal caricamento delle immagini -> loop senza stacchi.
+    function measure(){
+      var first = track.children[0];
+      if (!first){ half = 0; return; }
+      var cw = first.getBoundingClientRect().width;
+      var mr = parseFloat(getComputedStyle(first).marginRight) || 0;
+      half = DRESSES.length * (cw + mr);
+    }
+    function wrap(){ if (half > 0){ offset = ((offset % half) + half) % half; } }
+    function apply(){ track.style.transform = "translateX(" + (-offset) + "px)"; }
+    function tick(){
+      if (!paused && !dragging){ offset += speed; wrap(); apply(); }
+      requestAnimationFrame(tick);
+    }
+    measure();
+    requestAnimationFrame(tick);
+    window.addEventListener("resize", function(){
+      var ratio = half ? offset / half : 0;
+      measure(); offset = ratio * half; apply();
+    });
+
+    // ---- Trascinamento manuale (riprende da solo al rilascio) ----
+    var startX = 0, startOffset = 0, moved = 0;
+    mq.addEventListener("pointerdown", function(e){
+      dragging = true; moved = 0; startX = e.clientX; startOffset = offset;
+      mq.classList.add("dragging");
+      try { mq.setPointerCapture(e.pointerId); } catch(_){}
+    });
+    mq.addEventListener("pointermove", function(e){
+      if (!dragging) return;
+      var dx = e.clientX - startX;
+      if (Math.abs(dx) > moved) moved = Math.abs(dx);
+      offset = startOffset - dx; wrap(); apply();
+    });
+    function endDrag(){ if (dragging){ dragging = false; mq.classList.remove("dragging"); } }
+    mq.addEventListener("pointerup", endDrag);
+    mq.addEventListener("pointercancel", endDrag);
+    mq.addEventListener("pointerleave", endDrag);
+
+    // ---- Lightbox ----
+    var lb = document.getElementById("dressLb"),
+        lbImg = document.getElementById("lbImg"),
+        lbCap = document.getElementById("lbCap"),
+        cur = 0;
+    function render(){
+      var d = DRESSES[(cur % DRESSES.length + DRESSES.length) % DRESSES.length];
+      lbImg.src = d[1]; lbImg.alt = "Abito da sposa Eva Lendel " + d[0];
+      lbCap.innerHTML = d[0] + "<small>Eva Lendel</small>";
+    }
+    function open(i){ cur = i; render(); lb.classList.add("on"); lb.setAttribute("aria-hidden","false"); paused = true; }
+    function close(){ lb.classList.remove("on"); lb.setAttribute("aria-hidden","true"); paused = false; }
+    function nav(dir){ cur = (cur + dir + DRESSES.length) % DRESSES.length; render(); }
+
+    // Click su una card = apre la lightbox, SOLO se non si stava trascinando.
+    track.addEventListener("click", function(e){
+      var c = e.target.closest(".ts-mq-card");
+      if (!c || moved > 6) return;
+      open(parseInt(c.getAttribute("data-i"), 10) || 0);
+    });
+    document.getElementById("lbClose").addEventListener("click", close);
+    document.getElementById("lbPrev").addEventListener("click", function(e){ e.stopPropagation(); nav(-1); });
+    document.getElementById("lbNext").addEventListener("click", function(e){ e.stopPropagation(); nav(1); });
+    lb.addEventListener("click", function(e){ if (e.target === lb) close(); });
+    document.addEventListener("keydown", function(e){
+      if (!lb.classList.contains("on")) return;
+      if (e.key === "Escape") close();
+      else if (e.key === "ArrowLeft") nav(-1);
+      else if (e.key === "ArrowRight") nav(1);
+    });
+  })();
 
   // --- Conto alla rovescia all'inizio dell'evento (3 dicembre 2026, 09:00) ---
   var target = new Date("2026-12-03T09:00:00+01:00").getTime();
